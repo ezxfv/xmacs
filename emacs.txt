@@ -1,0 +1,86 @@
+## install emacs
+sudo zypper install makeinfo ImageMagick-devel gtgk3-devel webkit2gtk3-devel libXpm-devel libgnutls-devel libtiff-devel libjansson-devel giflib-devel libgccjit0 libgccjit0-devel-gcc11
+
+git clone --depth 1 -b feature/native-comp https://github.com/emacs-mirror/emacs.git
+
+
+./configure --with-native-compilation --with-pdumper=yes --with-dumping=pdumper --with-unexec=yes --with-x --with-xwidgets --with-x-toolkit=lucid --with-wide-int --with-imagemagick --with-json CFLAGS="-O3 -mtune=native -march=native -fomit-frame-pointer" --prefix=/usr/local
+
+make -j8 NATIVE_FULL_AOT=1
+
+
+## install poppler for pdf-tool
+export CPPFLAGS="-I/usr/include/poppler"
+cd /home/edenzhong/.emacs.d/.local/straight/build-28.0.50/pdf-tools/build/server 
+edit configure to disable poppler-private check
+./configure --bindir=/home/edenzhong/.emacs.d/.local/straight/build-28.0.50/pdf-tools/
+make -j8
+
+
+## For mac
+export CFLAGS="-O2 -I/usr/local/opt/libgccjit/include" LDFLAGS="-L/usr/local/opt/libgccjit/lib/gcc/10" LD_LIBRARY_PATH="/usr/local/opt/libgccjit/lib/gcc/10"
+export BYTE_COMPILE_EXTRA_FLAGS='--eval "(setq comp-speed 3)"'
+export NATIVE_FULL_AOT=1
+
+sudo cp /usr/local/Cellar/m4/1.4.18/bin/m4 /Library/Developer/CommandLineTools/usr/bin/m4
+
+brew tap d12frosted/emacs-plus
+brew reinstall gcc libgccjit
+brew install emacs-plus@28 --with-spacemacs-icon --with-xwidgets --with-native-comp
+
+or
+# ref: https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e
+cd ~/Library/Caches/Homebrew/emacs-plus@28--git
+
+./configure --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/Cellar/emacs-plus@28/28.0.50/share/info/emacs --prefix=/usr/local/Cellar/emacs-plus@28/28.0.50 --with-xml2 --with-gnutls --with-native-compilation --without-dbus --without-imagema
+
+./configure --with-native-compilation --with-pdumper=yes --with-dumping=pdumper --with-unexec=yes --with-x --with-xwidgets --with-wide-int --with-imagemagick --with-json CFLAGS="-O3 -mtune=native -march=native -fomit-frame-pointer" --prefix=/usr/local
+
+make -j8 NATIVE_FULL_AOT=1
+
+or
+
+./build.sh -B feature/native-comp -c -b -i
+
+## debian
+https://emacs.stackexchange.com/questions/59538/compile-emacs-from-feature-native-comp-gccemacs-branch-on-ubuntu
+apt install texinfo libjpeg-dev libtiff-dev libgif-dev libxpm-dev libgtk-3-dev gnutls-dev libncurses5-dev libxml2-dev libxt-dev gcc-9 g++-9 libgccjit0 libgccjit-9-dev libjansson4 libjansson-dev zlib1g-dev -y
+
+add-apt-repository ppa:ubuntu-toolchain-r/test
+change sources.list specified distribution to match your debian.
+if gpg error, run `apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1E9377A2BA9EF27F`
+
+export CC=/usr/bin/gcc-9 CXX=/usr/bin/gcc-9
+./autogen.sh
+./configure --with-cairo --with-modules --without-compress-install --with-x-toolkit=no --with-gnutls --without-gconf --without-xwidgets --without-toolkit-scroll-bars --without-xaw3d --without-gsettings --with-native-compilation --with-json --with-harfbuzz --with-jpeg --with-png --with-rsvg --with-tiff --with-wide-int --with-xft --with-xml2 --with-xpm CFLAGS="-O3 -mtune=native -march=native -fomit-frame-pointer" prefix=/usr/local 
+make -j8 NATIVE_FULL_AOT=1
+make install
+
+## deps
+
+### pyenv
+```
+sudo zypper install pyenv libopenssl-devel
+git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+pyenv install 3.8.0
+pyenv virtualenv 3.8.0 inf
+```
+
+# emacs-ng
+https://emacs-ng.github.io/emacs-ng/getting-started/
+
+install libexpat: https://github.com/libexpat/libexpat
+./autogen.sh
+./configure CFLAGS="-Wl,-rpath,shared -Wl,--disable-new-dtags" \
+            --with-json --with-modules --with-harfbuzz --with-compress-install \
+            --with-threads --with-included-regex --with-zlib --with-cairo --with-libsystemd \
+            --with-rsvg --with-native-compilation --with-webrender\
+            --without-sound --without-imagemagick --without-makeinfo --without-gpm --without-dbus \
+            --without-pop --without-toolkit-scroll-bars --without-mailutils --without-gsettings \
+            --with-all
+
+make NATIVE_FULL_AOT=1 PATH=$PATH:$HOME/.cargo/bin -j$(($(nproc) * 2))
+#checkinstall -y -D --pkgname=emacs-ng --pkgversion="28.5" \
+#     --requires="libjansson4,libncurses5,libgccjit0${render_deps}" \
+#     --pkggroup=emacs --gzman=yes --install=no \
+#     make install-strip
