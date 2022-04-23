@@ -6,14 +6,14 @@
 (if (display-graphic-p)
     ;; gui mode
     (progn
-      (setq doom-theme 'tango-dark)
+      (setq doom-theme 'doom-solarized-light)
       (setq doom-themes-treemacs-theme "doom-colors")
-      (after! evil
-        (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
-        (setq evil-normal-state-cursor '(box "dark red")
-              red-insert-state-cursor '(bar "black")
-              evil-visual-state-cursor '(hollow "orange"))
-        )
+      ;; (after! evil
+      ;;   (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
+      ;;   (setq evil-normal-state-cursor '(box "dark red")
+      ;;         red-insert-state-cursor '(bar "black")
+      ;;         evil-visual-state-cursor '(hollow "orange"))
+      ;;   )
       (after! flycheck
         (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
       )

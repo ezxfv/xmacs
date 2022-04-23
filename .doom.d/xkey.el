@@ -1,11 +1,6 @@
 ;; map key bindings
 (defalias 'ex! 'evil-ex-define-cmd)
 
-;; the escape key for exiting things seems very painful.
-(general-define-key
- :keymaps '(insert visual normal)
- "S-SPC" 'evil-force-normal-state)
-
 ;; file operations
 (ex! "cp"          #'+evil:copy-this-file)
 (ex! "mv"          #'+evil:move-this-file)
@@ -137,17 +132,13 @@
  :desc "Sort Python Imports"    :n "mo" #'+python/optimize-imports
  :desc "Select checker"         :n "ms" #'flycheck-select-checker
  :desc "Toggle vterm"           :n "mt" #'+vterm/toggle
- :desc "M-x"                    :n "mx" #'counsel-M-x
+ :desc "M-x"                    :n "mx" #'execute-extended-command
  :desc "Zen mode"               :n "mz" #'+zen/toggle-fullscreen
  :desc "Comment or Uncomment Line" :nv ";" #'evilnc-comment-or-uncomment-lines
  :desc "Exec cmd async"         :nv "mai" 'async-exec-from-input
  ;;:desc "Multiedit match all"    :n "C-c RET" #'evil-multiedit-match-all
  ;;:desc "Set Mark"             :nvi    "C-m" #'set-mark-command
  )
-
-(defun xx ()
-  (message "test")
-  )
 
 (map! :leader
       "/" #'+default/search-project
