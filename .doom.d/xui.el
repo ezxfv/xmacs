@@ -18,7 +18,9 @@
         (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
       )
   ;; terminal mode
-  (setq doom-theme 'doom-solarized-light))
+  (setq doom-theme 'doom-dark+)
+  (setq doom-themes-treemacs-theme "doom-colors")
+  )
 
 (plist-put +popup-defaults :modeline t)
 
