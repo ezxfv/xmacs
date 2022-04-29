@@ -18,19 +18,19 @@
         (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
       )
   ;; terminal mode
-  (setq doom-theme 'tsdh-dark))
+  (setq doom-theme 'doom-solarized-light))
 
 (plist-put +popup-defaults :modeline t)
 
-(after! ivy-posframe
-  (custom-set-faces '(ivy-posframe ((t (:background "#4B4B4B" :foreground "#00CC66")))))
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-window-center))))
+;; (after! ivy-posframe
+;;   (custom-set-faces '(ivy-posframe ((t (:background "#4B4B4B" :foreground "#00CC66")))))
+;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-window-center))))
 
-(after! dap-mode
-  (custom-set-faces
-   '(dap-ui-pending-breakpoint-face ((t (:background "dim gray"))))
-   '(dap-ui-breakpoint-verified-fringe ((t (:foreground "red" :weight bold))))
-   '(dap-ui-verified-breakpoint-face ((t (:background "red" :weight bold)))))
-  )
+;; (after! dap-mode
+;;   (custom-set-faces
+;;    '(dap-ui-pending-breakpoint-face ((t (:background "dim gray"))))
+;;    '(dap-ui-breakpoint-verified-fringe ((t (:foreground "red" :weight bold))))
+;;    '(dap-ui-verified-breakpoint-face ((t (:background "red" :weight bold)))))
+;;   )
 
 (provide 'xui)

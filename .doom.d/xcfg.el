@@ -35,9 +35,12 @@
         lsp-enable-indentation t
         lsp-enable-xref t
         lsp-enable-snippet t
-        lsp-enable-file-watchers nil
+        lsp-enable-file-watchers t
         )
   )
+
+(with-eval-after-load 'lsp-mode
+   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'"))
 
 (setq ispell-local-dictionary "/usr/share/dict/words")
 
@@ -131,6 +134,11 @@
                                          (flycheck-add-next-checker 'python-pyright '(warning . python-pylint))
                                          (flycheck-select-checker 'python-pyright)))
 
+(after! go-mode
+  (dap-utils-vscode-setup-function "dap-go" "golang" "go" dap-go-debug-path "0.32.0")
+  (setq dap-go-debug-program `("node"
+                               ,(f-join dap-go-debug-path "extension/dist/debugAdapter.js")))
+  )
 ;; go get golang.org/x/lint/golint
 ;; go get honnef.co/go/tools/cmd/staticcheck
 (add-hook 'go-mode-local-vars-hook (lambda ()
@@ -170,11 +178,6 @@
   (set-popup-rule! "*doom:vterm-popup:.*" :size 0.25 :vslot -4 :select t :quit nil :ttl 0 :side 'bottom)
   )
 
-(after! go-mode
-  (dap-utils-vscode-setup-function "dap-go" "golang" "go" dap-go-debug-path "0.32.0")
-  (setq dap-go-debug-program `("node"
-                               ,(f-join dap-go-debug-path "extension/dist/debugAdapter.js")))
-  )
 
 (after! keyfreq
   (keyfreq-mode 1)
@@ -225,12 +228,12 @@
     :config
     (quail-define-package "math" "UTF-8" "Ω" t)
     (quail-define-rules ; add whatever extra rules you want to define here...
-    ("\\from"    #X2190)
-    ("\\to"      #X2192)
-    ("\\lhd"     #X22B2)
-    ("\\rhd"     #X22B3)
-    ("\\unlhd"   #X22B4)
-    ("\\unrhd"   #X22B5))
+     ("\\from"    #X2190)
+     ("\\to"      #X2192)
+     ("\\lhd"     #X22B2)
+     ("\\rhd"     #X22B3)
+     ("\\unlhd"   #X22B4)
+     ("\\unrhd"   #X22B5))
     (mapc (lambda (x)
             (if (cddr x)
                 (quail-defrule (cadr x) (car (cddr x)))))
@@ -240,7 +243,7 @@
     :after (:any org-mode LaTeX-mode)
     :hook
     ((LaTeX-mode . turn-on-cdlatex)
-    (org-mode . turn-on-org-cdlatex)))
+     (org-mode . turn-on-org-cdlatex)))
 
   ;; sudo cp /usr/local/texlive/2020//texmf-var/fonts/conf/texlive-fontconfig.conf /etc/fonts/conf.d/09-texlive-fonts.conf
   ;; sudo fc-cache -fsv
@@ -250,30 +253,30 @@
   (add-hook 'LaTeX-mode-hook 'add-my-latex-environments)
   (defun add-my-latex-environments ()
     (LaTeX-add-environments
-    '("thm" LaTeX-env-label)
-    '("prop" LaTeX-env-label)
-    '("lem" LaTeX-env-label)
-    '("cor" LaTeX-env-label)
-    '("defn" LaTeX-env-label)
-    '("not" LaTeX-env-label)
-    '("rem" LaTeX-env-label)
-    '("ex" LaTeX-env-label)
-    '("align" LaTeX-env-label)
-    '("notation" LaTeX-env-label)
-    '("dmath" LaTeX-env-label)
-    ))
+     '("thm" LaTeX-env-label)
+     '("prop" LaTeX-env-label)
+     '("lem" LaTeX-env-label)
+     '("cor" LaTeX-env-label)
+     '("defn" LaTeX-env-label)
+     '("not" LaTeX-env-label)
+     '("rem" LaTeX-env-label)
+     '("ex" LaTeX-env-label)
+     '("align" LaTeX-env-label)
+     '("notation" LaTeX-env-label)
+     '("dmath" LaTeX-env-label)
+     ))
 
-;; Code I added to make syntax highlighting work in Auctex
+  ;; Code I added to make syntax highlighting work in Auctex
   (custom-set-variables
-  '(font-latex-math-environments (quote
-                                  ("display" "displaymath" "equation" "eqnarray" "gather" "multline"
+   '(font-latex-math-environments (quote
+                                   ("display" "displaymath" "equation" "eqnarray" "gather" "multline"
                                     "align" "alignat" "xalignat" "dmath")))
-  '(TeX-insert-braces nil)) ;;Stops putting {} on argumentless commands to "save" whitespace
+   '(TeX-insert-braces nil)) ;;Stops putting {} on argumentless commands to "save" whitespace
 
-;; Additionally, reftex code to recognize this environment as an equation
+  ;; Additionally, reftex code to recognize this environment as an equation
   (setq reftex-label-alist
         '(("dmath" ?e nil nil t)))
-)
+  )
 
 (use-package! org-roam-bibtex
   :after (org-roam)
@@ -283,30 +286,30 @@
         '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
   (setq orb-templates
         '(("r" "ref" plain (function org-roam-capture--get-point)
-          ""
-          :file-name "${slug}"
-          :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
+           ""
+           :file-name "${slug}"
+           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
 
 - keywords :: ${keywords}
 
 \n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
 
-          :unnarrowed t))))
+           :unnarrowed t))))
 
 (use-package! org-noter
   :after (:any org pdf-view)
   :config
   (setq
-  ;; The WM can handle splits
-  org-noter-notes-window-location 'other-frame
-  ;; Please stop opening frames
-  org-noter-always-create-frame nil
-  ;; I want to see the whole file
-  org-noter-hide-other nil
-  ;; Everything is relative to the rclone mega
-  org_notes (concat (getenv "HOME") "/org/notes")
-  org-directory org_notes
-  org-noter-notes-search-path (list org_notes)))
+   ;; The WM can handle splits
+   org-noter-notes-window-location 'other-frame
+   ;; Please stop opening frames
+   org-noter-always-create-frame nil
+   ;; I want to see the whole file
+   org-noter-hide-other nil
+   ;; Everything is relative to the rclone mega
+   org_notes (concat (getenv "HOME") "/org/notes")
+   org-directory org_notes
+   org-noter-notes-search-path (list org_notes)))
 
 (use-package! org-journal
   :config
@@ -316,10 +319,10 @@
 (use-package! anki-editor
   :after org
   :bind (:map org-mode-map
-        ("<f12>" . anki-editor-cloze-region-auto-incr)
-        ("<f11>" . anki-editor-cloze-region-dont-incr)
-        ("<f10>" . anki-editor-reset-cloze-number)
-        ("<f9>"  . anki-editor-push-tree))
+         ("<f12>" . anki-editor-cloze-region-auto-incr)
+         ("<f11>" . anki-editor-cloze-region-dont-incr)
+         ("<f10>" . anki-editor-reset-cloze-number)
+         ("<f9>"  . anki-editor-push-tree))
   :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
   :config
   (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
@@ -352,16 +355,16 @@
 
 ;; Org-capture templates
 (after! org-capture
-(add-to-list 'org-capture-templates
-              '("a" "Anki basic"
-                entry
-                (file+headline org-my-anki-file "Dispatch Shelf")
-                "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n%x\n"))
-(add-to-list 'org-capture-templates
-              '("A" "Anki cloze"
-                entry
-                (file+headline org-my-anki-file "Dispatch Shelf")
-                "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: Mega\n:END:\n** Text\n%x\n** Extra\n")))
+  (add-to-list 'org-capture-templates
+               '("a" "Anki basic"
+                 entry
+                 (file+headline org-my-anki-file "Dispatch Shelf")
+                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n%x\n"))
+  (add-to-list 'org-capture-templates
+               '("A" "Anki cloze"
+                 entry
+                 (file+headline org-my-anki-file "Dispatch Shelf")
+                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: Mega\n:END:\n** Text\n%x\n** Extra\n")))
 
 
 ;; Allow Emacs to access content from clipboard.

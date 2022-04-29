@@ -108,9 +108,9 @@
 (map!
  :desc "Go function header"     :n "g[" #'beginning-of-defun
  :desc "Go function end"        :n "g]" #'end-of-defun
- :desc "Find definition"        :n "gd" #'+lookup/definition
- :desc "Find reference"         :n "gr" #'+lookup/references
- :desc "Find implementation"    :n "gi" #'+lookup/implementations
+ :desc "Find definition"        :n "gd" #'lsp-find-definition
+ :desc "Find reference"         :n "gr" #'lsp-find-references
+ :desc "Find implementation"    :n "gi" #'lsp-find-implementation
  :desc "Go back find piont"     :n "gb" #'xref-pop-marker-stack
  :desc "Delete parens"          :n "z-" #'sp-splice-sexp
  :desc "Wrap with markup"       :nv "z." #'emmet-wrap-with-markup
