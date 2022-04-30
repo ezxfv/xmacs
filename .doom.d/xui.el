@@ -18,8 +18,12 @@
         (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
       )
   ;; terminal mode
-  (setq doom-theme 'doom-dark+)
+  (setq doom-theme 'misterioso)
   (setq doom-themes-treemacs-theme "doom-colors")
+  (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
+  (setq evil-normal-state-cursor '(box "dark red")
+        red-insert-state-cursor '(bar "black")
+        evil-visual-state-cursor '(hollow "orange"))
   )
 
 (plist-put +popup-defaults :modeline t)

@@ -40,7 +40,7 @@
   )
 
 (with-eval-after-load 'lsp-mode
-   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'"))
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'"))
 
 (setq ispell-local-dictionary "/usr/share/dict/words")
 
@@ -137,8 +137,9 @@
 (after! go-mode
   (dap-utils-vscode-setup-function "dap-go" "golang" "go" dap-go-debug-path "0.32.0")
   (setq dap-go-debug-program `("node"
-                               ,(f-join dap-go-debug-path "extension/dist/debugAdapter.js")))
+                               ,(f-join dap-go-debug-path "dist/debugAdapter.js")))
   )
+
 ;; go get golang.org/x/lint/golint
 ;; go get honnef.co/go/tools/cmd/staticcheck
 (add-hook 'go-mode-local-vars-hook (lambda ()
@@ -370,5 +371,10 @@
 ;; Allow Emacs to access content from clipboard.
 (setq x-select-enable-clipboard t
       x-select-enable-primary t)
+
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq mouse-wheel-progressive-speed 't)
+(setq mouse-wheel-follow-mouse 't)
+(setq scroll-step 2)
 
 (provide 'xcfg)
