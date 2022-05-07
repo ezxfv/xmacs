@@ -31,7 +31,7 @@
 
 (use-package! insert-translated-name
   :init
-  (setq insert-translated-name-camel-style-mode-list '(go-mode js-mode))
+  (setq insert-translated-name-camel-style-mode-list '(go-mode latex-mode))
   (setq insert-translated-name-underline-style-mode-list '(python-mode ruby-mode))
   (setq insert-translated-name-translate-engine 'youdao)
   (map!

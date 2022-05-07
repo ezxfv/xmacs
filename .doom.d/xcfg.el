@@ -134,11 +134,11 @@
                                          (flycheck-add-next-checker 'python-pyright '(warning . python-pylint))
                                          (flycheck-select-checker 'python-pyright)))
 
-(after! go-mode
-  (dap-utils-vscode-setup-function "dap-go" "golang" "go" dap-go-debug-path "0.32.0")
-  (setq dap-go-debug-program `("node"
-                               ,(f-join dap-go-debug-path "dist/debugAdapter.js")))
-  )
+;; (after! go-mode
+;;   (dap-utils-vscode-setup-function "dap-go" "golang" "go" dap-go-debug-path "0.32.0")
+;;   (setq dap-go-debug-program `("node"
+;;                                ,(f-join dap-go-debug-path "dist/debugAdapter.js")))
+;;   )
 
 ;; go get golang.org/x/lint/golint
 ;; go get honnef.co/go/tools/cmd/staticcheck

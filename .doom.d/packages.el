@@ -73,8 +73,3 @@
   (package! pyim-greatdict
     :recipe (:host github :repo "edenzhong7/pyim-greatdict"))
   )
-
-(when (featurep! :tools debugger +lsp)
-  (package! dap-mode-launch-json
-    :recipe (:host github :repo "nbfalcon/dap-mode-launch-json"))
-  )
