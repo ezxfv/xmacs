@@ -143,7 +143,7 @@
 ;; go get golang.org/x/lint/golint
 ;; go get honnef.co/go/tools/cmd/staticcheck
 (add-hook 'go-mode-local-vars-hook (lambda ()
-                                     (flycheck-mode 1)
+                                     (flycheck-mode 0)
                                      (semantic-mode 1)
                                      (flycheck-add-next-checker 'go-staticcheck '(info . go-golint))
                                      (flycheck-select-checker 'go-staticcheck)))

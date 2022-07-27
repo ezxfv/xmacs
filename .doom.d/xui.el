@@ -6,7 +6,7 @@
 (if (display-graphic-p)
     ;; gui mode
     (progn
-      (setq doom-theme 'doom-solarized-light)
+      (setq doom-theme 'doom-one)
       (setq doom-themes-treemacs-theme "doom-colors")
       ;; (after! evil
       ;;   (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
