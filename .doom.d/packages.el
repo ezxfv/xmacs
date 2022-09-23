@@ -45,12 +45,12 @@
                                         ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
                                         ;(unpin! t)
-(package! flycheck-inline)
-(package! smart-hungry-delete)
-(package! move-text)
-(package! parrot)
+;; (package! flycheck-inline)
+;; (package! smart-hungry-delete)
+;; (package! move-text)
+;; (package! parrot)
 (package! youdao-dictionary)
-(package! link-hint)
+;; (package! link-hint)
 (package! visual-regexp)
 (package! visual-regexp-steriods
   :recipe (:host github :repo "benma/visual-regexp-steroids.el"))
@@ -63,10 +63,11 @@
 (package! keyfreq)
 (package! anki-editor)
 (package! org-roam-bibtex)
+(package! esh-autosuggest)
 
 ;; development
-(package! instant-rename-tag
-  :recipe (:host github :repo "manateelazycat/instant-rename-tag"))
+;; (package! instant-rename-tag
+;;   :recipe (:host github :repo "manateelazycat/instant-rename-tag"))
 (package! leetcode)
 
 (when (featurep! :input chinese +greatdict)

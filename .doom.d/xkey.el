@@ -1,11 +1,3 @@
-;; map key bindings
-(defalias 'ex! 'evil-ex-define-cmd)
-
-;; file operations
-(ex! "cp"          #'+evil:copy-this-file)
-(ex! "mv"          #'+evil:move-this-file)
-(ex! "rm"          #'+evil:delete-this-file)
-
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
@@ -246,9 +238,5 @@
              ns-option-modifier        'meta
              mac-right-option-modifier 'none
              ns-right-option-modifier  'none)))
-
-(map! :localleader
-      "n" #'my-imenu-goto-next
-      "p" #'my-imenu-goto-prev)
 
 (provide 'xkey)

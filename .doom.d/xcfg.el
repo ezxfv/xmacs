@@ -9,7 +9,7 @@
   ;; (add-to-list 'company-backends 'company-ispell)
   ;; (add-hook 'evil-normal-state-entry-hook #'company-abort)
 
-  (when (featurep! :completion company +tabnine)
+  (when (modulep! :completion company +tabnine)
     (add-to-list 'company-backends #'company-tabnine)
     (setq company-tabnine--disable-next-transform nil)
     (advice-add #'company--transform-candidates :around (lambda (func &rest args)
@@ -26,6 +26,12 @@
 
 (setq-default history-length 999)
 (setq-default prescient-history-length 1000)
+
+(use-package esh-autosuggest
+  :hook (eshell-mode . esh-autosuggest-mode))
+  ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
+  ;; line below instead:
+  ;; :hook (eshell-mode-hook . esh-autosuggest-mode)
 
 (use-package! lsp-mode
   :config
@@ -82,13 +88,6 @@
         "*/_region_.log"
         "*/_region_.tex"))
 
-;; hungry delete
-(use-package! smart-hungry-delete
-  :bind (("<backspace>" . smart-hungry-delete-backward-char)
-         ("C-d" . smart-hungry-delete-forward-char))
-  :defer nil ;; dont defer so we can add our functions to hooks
-  :config (smart-hungry-delete-add-default-hooks)
-  )
 
 (use-package! org-download
   :after org
@@ -143,13 +142,14 @@
 ;; go get golang.org/x/lint/golint
 ;; go get honnef.co/go/tools/cmd/staticcheck
 (add-hook 'go-mode-local-vars-hook (lambda ()
-                                     (flycheck-mode 0)
+                                     (flycheck-mode 1)
                                      (semantic-mode 1)
+                                     (setq gofmt-command "goimports")
                                      (flycheck-add-next-checker 'go-staticcheck '(info . go-golint))
                                      (flycheck-select-checker 'go-staticcheck)))
+(add-hook 'before-save-hook #'gofmt-before-save)
 
-
-(when (featurep! :input chinese +greatdict)
+(when (modulep! :input chinese +greatdict)
   (use-package! pyim-greatdict
     :init
     (pyim-greatdict-enable)
@@ -214,7 +214,7 @@
      ))
    ))
 
-(when (featurep! :lang latex)
+(when (modulep! :lang latex)
   (use-package! company-math
     :after (:any org-mode TeX-mode)
     :config

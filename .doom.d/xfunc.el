@@ -8,7 +8,7 @@
 (defun ivy-posframe-display-at-frame-bottom-right (str)
   (ivy-posframe--display str #'posframe-poshandler-frame-bottom-right-corner))
 
-(when (featurep! :lang python +pylance)
+(when (modulep! :lang python +pylance)
   (require 'lsp)
 
   ;; download vsix from `https://www.vsixhub.com/vsix/41816/'

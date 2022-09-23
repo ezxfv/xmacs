@@ -56,6 +56,9 @@ export CC=/usr/bin/gcc-9 CXX=/usr/bin/gcc-9
 make -j8 NATIVE_FULL_AOT=1
 make install
 
+# terminal version
+./configure --with-native-compilation --with-pdumper=yes --with-dumping=pdumper --with-unexec=yes --without-x --with-wide-int --with-json CFLAGS="-O3 -mtune=native -march=native -fomit-frame-pointer" --prefix=/usr/local
+
 ## deps
 
 ### pyenv

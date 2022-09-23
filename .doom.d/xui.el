@@ -18,7 +18,7 @@
         (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
       )
   ;; terminal mode
-  (setq doom-theme 'tsdh-dark)
+  (setq doom-theme 'doom-material-dark)
   (setq doom-themes-treemacs-theme "doom-colors")
   (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
   (setq evil-normal-state-cursor '(box "dark red")
