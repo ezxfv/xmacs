@@ -5,33 +5,22 @@
         company-insertion-triggers t
         company-dabbrev-downcase nil
         company-selection-wrap-around t)
-  ;; (add-to-list 'company-backends '(company-capf :with company-dabbrev))
-  ;; (add-to-list 'company-backends 'company-ispell)
-  ;; (add-hook 'evil-normal-state-entry-hook #'company-abort)
-
-  (when (modulep! :completion company +tabnine)
-    (add-to-list 'company-backends #'company-tabnine)
-    (setq company-tabnine--disable-next-transform nil)
-    (advice-add #'company--transform-candidates :around (lambda (func &rest args)
-                                                          (if (not company-tabnine--disable-next-transform)
-                                                              (apply func args)
-                                                            (setq company-tabnine--disable-next-transform nil)
-                                                            (car args))))
-    (advice-add #'company-tabnine :around (lambda (func &rest args)
-                                            (when (eq (car args) 'candidates)
-                                              (setq company-tabnine--disable-next-transform t))
-                                            (apply func args)))
-    )
   )
+
+
+(setq ispell-hunspell-dict-paths-alist
+      `(("english" ,(concat doom-user-dir "vendor/dicts/dict-en-20221101_lo/en_US.aff"))))
+(setq ispell-local-dictionary "english")
+(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
 
 (setq-default history-length 999)
 (setq-default prescient-history-length 1000)
 
-(use-package esh-autosuggest
-  :hook (eshell-mode . esh-autosuggest-mode))
+(use-package! esh-autosuggest
+  ;;:hook (eshell-mode . esh-autosuggest-mode))
   ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
   ;; line below instead:
-  ;; :hook (eshell-mode-hook . esh-autosuggest-mode)
+  :hook (eshell-mode-hook . esh-autosuggest-mode))
 
 (use-package! lsp-mode
   :config
@@ -47,8 +36,6 @@
 
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'"))
-
-(setq ispell-local-dictionary "/usr/share/dict/words")
 
 (after! text-mode
   (add-hook! 'text-mode-hook
@@ -144,9 +131,10 @@
 (add-hook 'go-mode-local-vars-hook (lambda ()
                                      (flycheck-mode 1)
                                      (semantic-mode 1)
-                                     (setq gofmt-command "goimports")
-                                     (flycheck-add-next-checker 'go-staticcheck '(info . go-golint))
-                                     (flycheck-select-checker 'go-staticcheck)))
+                                     (setq gofmt-command "goimports")))
+;; (flycheck-add-next-checker 'go-staticcheck '(info . go-golint))
+;; (flycheck-select-checker 'go-staticcheck)))
+
 (add-hook 'before-save-hook #'gofmt-before-save)
 
 (when (modulep! :input chinese +greatdict)
@@ -168,12 +156,6 @@
         ivy-re-builders-alist '((t . pyim-ivy-cregexp)))
   )
 
-(after! leetcode
-  (setq leetcode-prefer-language 'python3
-        leetcode-prefer-sql 'mysql
-        leetcode-save-solutions t
-        leetcode-directory '~/leetcode)
-  )
 
 (after! vterm
   (set-popup-rule! "*doom:vterm-popup:.*" :size 0.25 :vslot -4 :select t :quit nil :ttl 0 :side 'bottom)
@@ -209,9 +191,9 @@
    :n "n"            #'evil-collection-pdf-view-next-line-or-next-page
    :localleader
    (:prefix "o"
-    (:prefix "n"
-     :desc "Insert" "i" 'org-noter-insert-note
-     ))
+            (:prefix "n"
+             :desc "Insert" "i" 'org-noter-insert-note
+             ))
    ))
 
 (when (modulep! :lang latex)
@@ -312,18 +294,13 @@
    org-directory org_notes
    org-noter-notes-search-path (list org_notes)))
 
-(use-package! org-journal
-  :config
-  (setq org-journal-dir "~/org/journal/"
-        org-journal-date-format "%A, %d %B %Y"))
-
 (use-package! anki-editor
   :after org
   :bind (:map org-mode-map
-         ("<f12>" . anki-editor-cloze-region-auto-incr)
-         ("<f11>" . anki-editor-cloze-region-dont-incr)
-         ("<f10>" . anki-editor-reset-cloze-number)
-         ("<f9>"  . anki-editor-push-tree))
+              ("<f12>" . anki-editor-cloze-region-auto-incr)
+              ("<f11>" . anki-editor-cloze-region-dont-incr)
+              ("<f10>" . anki-editor-reset-cloze-number)
+              ("<f9>"  . anki-editor-push-tree))
   :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
   :config
   (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
@@ -377,4 +354,17 @@
 (setq mouse-wheel-follow-mouse 't)
 (setq scroll-step 2)
 
+
+(use-package! tree-sitter
+              :hook (prog-mode . turn-on-tree-sitter-mode)
+              :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+              :config
+              (require 'tree-sitter-langs)
+              ;; This makes every node a link to a section of code
+              (setq tree-sitter-debug-jump-buttons t
+                    ;; and this highlights the entire sub tree in your code
+                    tree-sitter-debug-highlight-jump-region t)
+              )
+
 (provide 'xcfg)
+;;; xcfg.el

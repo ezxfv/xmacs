@@ -117,10 +117,8 @@
  :desc "Delete to end"          :nv "me" #'evil-delete-line
  :desc "Mark fun"               :nv "mf" #'mark-defun
  :desc "Delete to begin"        :nv "mh" #'evil-delete-line-forward
- :desc "Goto percent of buffer" :n "mgp" #'goto-buffer-percent
  :desc "Open Jupyter"           :n "mj" #'+python/open-jupyter-repl
  :desc "Multiedit match all"    :nv "mma" #'evil-multiedit-match-all
- :desc "Pull next line"         :n "mn" #'pull-next-line
  :desc "Sort Python Imports"    :n "mo" #'+python/optimize-imports
  :desc "Select checker"         :n "ms" #'flycheck-select-checker
  :desc "Toggle vterm"           :n "mt" #'+vterm/toggle
@@ -128,8 +126,6 @@
  :desc "Zen mode"               :n "mz" #'+zen/toggle-fullscreen
  :desc "Comment or Uncomment Line" :nv ";" #'evilnc-comment-or-uncomment-lines
  :desc "Exec cmd async"         :nv "mai" 'async-exec-from-input
- ;;:desc "Multiedit match all"    :n "C-c RET" #'evil-multiedit-match-all
- ;;:desc "Set Mark"             :nvi    "C-m" #'set-mark-command
  )
 
 (map! :leader
@@ -162,53 +158,53 @@
       )
 
 (after! org
-  (map! :localleader
-        :map org-mode-map
-        :desc "Eval Block" "e" 'ober-eval-block-in-repl
-        (:prefix ("a" . "Anki")
-         :desc "Push" "p" 'anki-editor-push-notes
-         :desc "Retry" "r" 'anki-editor-retry-failure-notes
-         :desc "Insert" "n" 'anki-editor-insert-note
-         (:prefix ("c" . "Cloze")
-          :desc "Dwim" "d" 'anki-editor-cloze-dwim
-          :desc "Region" "r" 'anki-editor-cloze-region
-          )
-         )
-        (:prefix "o"
-         :desc "Tags" "t" 'org-set-tags
-         :desc "Roam Bibtex" "b" 'orb-note-actions
-         (:prefix ("p" . "Properties")
-          :desc "Set" "s" 'org-set-property
-          :desc "Delete" "d" 'org-delete-property
-          :desc "Actions" "a" 'org-property-action
-          )
-         )
-        (:prefix ("i" . "Insert")
-         :desc "Link/Image" "l" 'org-insert-link
-         :desc "Item" "o" 'org-toggle-item
-         :desc "Citation" "c" 'org-ref-helm-insert-cite-link
-         :desc "Footnote" "f" 'org-footnote-action
-         :desc "Table" "t" 'org-table-create-or-convert-from-region
-         :desc "Screenshot" "s" 'org-download-screenshot
-         (:prefix ("b" . "Math")
-          :desc "Bold" "f" 'org-make-bold-math
-          :desc "Blackboard" "b" 'org-make-blackboard-math
-          :desc "Vert" "v" 'org-make-vert-math
-          )
-         (:prefix ("h" . "Headings")
-          :desc "Normal" "h" 'org-insert-heading
-          :desc "Todo" "t" 'org-insert-todo-heading
-          (:prefix ("s" . "Subheadings")
-           :desc "Normal" "s" 'org-insert-subheading
-           :desc "Todo" "t" 'org-insert-todo-subheading
-           )
-          )
-         (:prefix ("e" . "Exports")
-          :desc "Dispatch" "d" 'org-export-dispatch
-          )
+ (map! :localleader
+       :map org-mode-map
+       :desc "Eval Block" "e" 'ober-eval-block-in-repl
+      ;;  (:prefix ("a" . "Anki")
+      ;;   :desc "Push" "p" 'anki-editor-push-notes
+      ;;   :desc "Retry" "r" 'anki-editor-retry-failure-notes
+      ;;   :desc "Insert" "n" 'anki-editor-insert-note
+      ;;   (:prefix ("c" . "Cloze")
+      ;;    :desc "Dwim" "d" 'anki-editor-cloze-dwim
+      ;;    :desc "Region" "r" 'anki-editor-cloze-region
+      ;;    )
+      ;;   )
+       (:prefix "o"
+        :desc "Tags" "t" 'org-set-tags
+        :desc "Roam Bibtex" "b" 'orb-note-actions
+        (:prefix ("p" . "Properties")
+         :desc "Set" "s" 'org-set-property
+         :desc "Delete" "d" 'org-delete-property
+         :desc "Actions" "a" 'org-property-action
          )
         )
-  )
+       (:prefix ("i" . "Insert")
+        :desc "Link/Image" "l" 'org-insert-link
+        :desc "Item" "o" 'org-toggle-item
+        :desc "Citation" "c" 'org-ref-helm-insert-cite-link
+        :desc "Footnote" "f" 'org-footnote-action
+        :desc "Table" "t" 'org-table-create-or-convert-from-region
+        :desc "Screenshot" "s" 'org-download-screenshot
+        (:prefix ("b" . "Math")
+         :desc "Bold" "f" 'org-make-bold-math
+         :desc "Blackboard" "b" 'org-make-blackboard-math
+         :desc "Vert" "v" 'org-make-vert-math
+         )
+        (:prefix ("h" . "Headings")
+         :desc "Normal" "h" 'org-insert-heading
+         :desc "Todo" "t" 'org-insert-todo-heading
+         (:prefix ("s" . "Subheadings")
+          :desc "Normal" "s" 'org-insert-subheading
+          :desc "Todo" "t" 'org-insert-todo-subheading
+          )
+         )
+        (:prefix ("e" . "Exports")
+         :desc "Dispatch" "d" 'org-export-dispatch
+         )
+        )
+       )
+ )
 
 (map! :localleader
       :map markdown-mode-map

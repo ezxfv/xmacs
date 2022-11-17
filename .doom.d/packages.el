@@ -64,13 +64,3 @@
 (package! anki-editor)
 (package! org-roam-bibtex)
 (package! esh-autosuggest)
-
-;; development
-;; (package! instant-rename-tag
-;;   :recipe (:host github :repo "manateelazycat/instant-rename-tag"))
-(package! leetcode)
-
-(when (featurep! :input chinese +greatdict)
-  (package! pyim-greatdict
-    :recipe (:host github :repo "edenzhong7/pyim-greatdict"))
-  )
