@@ -179,22 +179,7 @@
   (add-hook! 'pdf-view-mode-hook (evil-colemak-basics-mode -1))
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t
-        pdf-view-resize-factor 1.1)
-  ;; faster motion
-  (map!
-   :map pdf-view-mode-map
-   :n "g g"          #'pdf-view-first-page
-   :n "G"            #'pdf-view-last-page
-   :n "N"            #'pdf-view-next-page-command
-   :n "E"            #'pdf-view-previous-page-command
-   :n "e"            #'evil-collection-pdf-view-previous-line-or-previous-page
-   :n "n"            #'evil-collection-pdf-view-next-line-or-next-page
-   :localleader
-   (:prefix "o"
-            (:prefix "n"
-             :desc "Insert" "i" 'org-noter-insert-note
-             ))
-   ))
+        pdf-view-resize-factor 1.1))
 
 (when (modulep! :lang latex)
   (use-package! company-math
@@ -278,71 +263,6 @@
 \n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
 
            :unnarrowed t))))
-
-(use-package! org-noter
-  :after (:any org pdf-view)
-  :config
-  (setq
-   ;; The WM can handle splits
-   org-noter-notes-window-location 'other-frame
-   ;; Please stop opening frames
-   org-noter-always-create-frame nil
-   ;; I want to see the whole file
-   org-noter-hide-other nil
-   ;; Everything is relative to the rclone mega
-   org_notes (concat (getenv "HOME") "/org/notes")
-   org-directory org_notes
-   org-noter-notes-search-path (list org_notes)))
-
-(use-package! anki-editor
-  :after org
-  :bind (:map org-mode-map
-              ("<f12>" . anki-editor-cloze-region-auto-incr)
-              ("<f11>" . anki-editor-cloze-region-dont-incr)
-              ("<f10>" . anki-editor-reset-cloze-number)
-              ("<f9>"  . anki-editor-push-tree))
-  :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
-  :config
-  (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
-        anki-editor-org-tags-as-anki-tags t
-        org-my-anki-file "~/org/anki/anki.org")
-
-  (defun anki-editor-cloze-region-auto-incr (&optional arg)
-    "Cloze region without hint and increase card number."
-    (interactive)
-    (anki-editor-cloze-region my-anki-editor-cloze-number "")
-    (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
-    (forward-sexp))
-
-  (defun anki-editor-cloze-region-dont-incr (&optional arg)
-    "Cloze region without hint using the previous card number."
-    (interactive)
-    (anki-editor-cloze-region (1- my-anki-editor-cloze-number) "")
-    (forward-sexp))
-
-  (defun anki-editor-reset-cloze-nußmber (&optional arg)
-    "Reset cloze number to ARG or 1"
-    (interactive)
-    (setq my-anki-editor-cloze-number (or arg 1)))
-
-  (defun anki-editor-push-tree ()
-    "Push all notes under a tree."
-    (interactive)
-    (anki-editor-push-notes '(4))
-    (anki-editor-reset-cloze-number)))
-
-;; Org-capture templates
-(after! org-capture
-  (add-to-list 'org-capture-templates
-               '("a" "Anki basic"
-                 entry
-                 (file+headline org-my-anki-file "Dispatch Shelf")
-                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n%x\n"))
-  (add-to-list 'org-capture-templates
-               '("A" "Anki cloze"
-                 entry
-                 (file+headline org-my-anki-file "Dispatch Shelf")
-                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: Mega\n:END:\n** Text\n%x\n** Extra\n")))
 
 
 ;; Allow Emacs to access content from clipboard.

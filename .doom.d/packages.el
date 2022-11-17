@@ -61,6 +61,5 @@
 (package! valign)
 (package! gotest)
 (package! keyfreq)
-(package! anki-editor)
 (package! org-roam-bibtex)
 (package! esh-autosuggest)

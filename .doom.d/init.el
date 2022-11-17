@@ -157,7 +157,6 @@
          +dragndrop
          +gnuplot
          +hugo
-         +jupyter
          +pandoc
          +pomodoro
          +present
