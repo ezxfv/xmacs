@@ -56,6 +56,7 @@
 (global-set-key (kbd "<M-f5>") 'deadgrep-kill-all-buffers)
 (global-set-key (kbd "<f12>") 'smerge-vc-next-conflict)
 (global-set-key (kbd "<f11>") '+vc/smerge-hydra/body)
+(global-set-key (kbd "C-\\") 'toggle-input-method)
 
 (map!
  "C-'"     #'imenu-list-smart-toggle

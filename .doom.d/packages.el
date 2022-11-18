@@ -63,3 +63,13 @@
 (package! keyfreq)
 (package! org-roam-bibtex)
 (package! esh-autosuggest)
+
+(when (featurep! :input chinese +greatdict)
+  (package! pyim-greatdict
+    :recipe (:host github :repo "edenzhong7/pyim-greatdict"))
+  )
+
+(when (featurep! :tools debugger +lsp)
+  (package! dap-mode-launch-json
+    :recipe (:host github :repo "nbfalcon/dap-mode-launch-json"))
+  )

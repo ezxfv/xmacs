@@ -9,7 +9,7 @@
 
 
 (setq ispell-hunspell-dict-paths-alist
-      `(("english" ,(concat doom-user-dir "vendor/dicts/dict-en-20221101_lo/en_US.aff"))))
+      `(("english" ,(concat doom-user-dir "vendor/words/dict-en-20221101_lo/en_US.aff"))))
 (setq ispell-local-dictionary "english")
 (setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
 
@@ -131,30 +131,30 @@
 (add-hook 'go-mode-local-vars-hook (lambda ()
                                      (flycheck-mode 1)
                                      (semantic-mode 1)
+                                     (flycheck-disable-checker 'go-build)
                                      (setq gofmt-command "goimports")))
 ;; (flycheck-add-next-checker 'go-staticcheck '(info . go-golint))
 ;; (flycheck-select-checker 'go-staticcheck)))
 
 (add-hook 'before-save-hook #'gofmt-before-save)
 
-(when (modulep! :input chinese +greatdict)
-  (use-package! pyim-greatdict
-    :init
-    (pyim-greatdict-enable)
-    )
-  )
+(defun my-orderless-regexp (orig-func component)
+  (let ((result (funcall orig-func component)))
+    (pyim-cregexp-build result)))
 
 (after! pyim
   (if (display-graphic-p)
       (setq pyim-page-tooltip 'posframe)
     (setq pyim-page-tooltip 'popup)
     )
+  (advice-add 'orderless-regexp :around #'my-orderless-regexp)
   (setq pyim-isearch-mode 1
+        default-input-method "pyim"
+        pyim-dicts `((:name greatdict :file ,(concat doom-user-dir "vendor/pyim/pyim-greatdict.pyim"))
+                     (:name sogou :file ,(concat doom-user-dir "vendor/pyim/sogou.pyim")))
         pyim-default-scheme 'quanpin
         pyim-english-input-switch-functions '(pyim-probe-isearch-mode)
-        pyim-page-length 5
-        ivy-re-builders-alist '((t . pyim-ivy-cregexp)))
-  )
+        pyim-page-length 6))
 
 
 (after! vterm
@@ -276,15 +276,15 @@
 
 
 (use-package! tree-sitter
-              :hook (prog-mode . turn-on-tree-sitter-mode)
-              :hook (tree-sitter-after-on . tree-sitter-hl-mode)
-              :config
-              (require 'tree-sitter-langs)
-              ;; This makes every node a link to a section of code
-              (setq tree-sitter-debug-jump-buttons t
-                    ;; and this highlights the entire sub tree in your code
-                    tree-sitter-debug-highlight-jump-region t)
-              )
+  :hook (prog-mode . turn-on-tree-sitter-mode)
+  :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+  :config
+  (require 'tree-sitter-langs)
+  ;; This makes every node a link to a section of code
+  (setq tree-sitter-debug-jump-buttons t
+        ;; and this highlights the entire sub tree in your code
+        tree-sitter-debug-highlight-jump-region t)
+  )
 
 (provide 'xcfg)
 ;;; xcfg.el

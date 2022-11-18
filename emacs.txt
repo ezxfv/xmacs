@@ -87,3 +87,8 @@ make NATIVE_FULL_AOT=1 PATH=$PATH:$HOME/.cargo/bin -j$(($(nproc) * 2))
 #     --requires="libjansson4,libncurses5,libgccjit0${render_deps}" \
 #     --pkggroup=emacs --gzman=yes --install=no \
 #     make install-strip
+
+
+# latest
+sudo apt-get install libjansson4 libjansson-dev
+./configure --prefix=/usr/local --with-native-compilation  --with-pdumper=yes --with-dumping=pdumper --with-json --with-gnutls --with-jpeg --with-png --with-rsvg --with-tiff --with-wide-int --with-xft --with-xml2 --with-xpm --with-modules=yes --with-x=yes --with-x-toolkit=gtk3 --with-xwidgets=yes 'CPPFLAGS=-Wdate-time -D_FORTIFY_SOURCE=2' 'LDFLAGS=-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro'

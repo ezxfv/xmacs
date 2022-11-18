@@ -6,18 +6,15 @@
   :init
   ;; download url: http://download.huzheng.org/zh_CN/
   (setq sdcv-dictionary-simple-list        ;; a simple dictionary list
-        '("朗道英汉字典5.0"
-          "计算机词汇"))
+        '("朗道英汉字典5.0"))
   (setq sdcv-dictionary-complete-list      ;; a complete dictionary list
         '("朗道英汉字典5.0"
           "牛津高阶英汉双解"
           "牛津现代英汉双解词典"
-          "牛津英汉双解美化版"
-          "Webster's Revised Unabridged Dictionary (1913)"
-          "计算机词汇"
-          "中国大百科全书2.0版"
+          "英汉汉英专业词典"
+          "21世纪双语科技词典"
           ))
-  (setq sdcv-dictionary-data-dir "~/stardict/dic")   ;; set local sdcv dict to search word
+  (setq sdcv-dictionary-data-dir (concat doom-user-dir "vendor/dicts/"))   ;; set local sdcv dict to search word
   )
 
 (use-package! company-english-helper
