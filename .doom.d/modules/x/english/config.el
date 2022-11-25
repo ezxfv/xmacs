@@ -15,7 +15,6 @@
           "英汉汉英专业词典"
           "21世纪双语科技词典"
           "牛津高阶英汉双解"
-          ;; "朗道汉英字典5.0"
           ))
   (setq sdcv-dictionary-data-dir (concat doom-user-dir "vendor/dicts/"))   ;; set local sdcv dict to search word
   )
