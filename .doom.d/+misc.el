@@ -123,7 +123,7 @@
                   org-download-screenshot-file "/tmp/screenshot.png"
                   )
     )
-  (when (featurep! :lang org +roam2)
+  (when (modulep! :lang org +roam2)
     (use-package! websocket
       :after org-roam)
 
