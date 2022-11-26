@@ -12,9 +12,11 @@
   (add-hook 'before-save-hook #'eglot-format-buffer -90 t)
   (add-hook 'before-save-hook #'+eglot-organize-imports -80 t))
 
-;; (after! go-mode
-;;   (add-hook 'go-mode-hook #'eglot-go-install-save-hooks))
 
-(after! go-mode
-  (add-hook 'go-mode-hook 'lsp-deferred)
-  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+(if (featurep! :tools lsp +eglot)
+    (progn 
+      (after! go-mode
+        (add-hook 'go-mode-hook #'eglot-go-install-save-hooks)))
+  (after! go-mode
+    (add-hook 'go-mode-hook 'lsp-deferred)
+    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)))
