@@ -1,118 +1,21 @@
-(after! company
-  (setq company-idle-delay 0
-        company-minimum-prefix-length 2
-        company-show-quick-access t
-        company-insertion-triggers t
-        company-dabbrev-downcase nil
-        company-selection-wrap-around t)
-  )
-
-
-(setq ispell-hunspell-dict-paths-alist
-      `(("english" ,(concat doom-user-dir "vendor/words/dict-en-20221101_lo/en_US.aff"))))
-(setq ispell-local-dictionary "english")
-(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-
+;; general config
 (setq-default history-length 999)
 (setq-default prescient-history-length 1000)
 
-(use-package! esh-autosuggest
-  ;;:hook (eshell-mode . esh-autosuggest-mode))
-  ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
-  ;; line below instead:
-  :config
-  (add-hook 'eshell-mode-hook #'esh-autosuggest-mode -100))
+;; Allow Emacs to access content from clipboard.
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t)
 
-
-(after! lsp-mode
-   (setq lsp-idle-delay 0.10
-        lsp-auto-configure t
-        lsp-enable-imenu t
-        lsp-enable-indentation t
-        lsp-enable-xref t
-        lsp-enable-snippet t
-        lsp-enable-file-watchers t
-        )
-  (lsp-register-custom-settings
-    '(("gopls.completeUnimported" t t)
-    ("gopls.staticcheck" t t))))
-
-
-(with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'"))
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq mouse-wheel-progressive-speed 't)
+(setq mouse-wheel-follow-mouse 't)
+(setq scroll-step 2)
 
 (after! text-mode
   (add-hook! 'text-mode-hook
              ;; apply ANSI color codes
              (with-silent-modifications
                (ansi-color-apply-on-region (point-min) (point-max)))))
-
-;; treemacs ignore files
-(setq treemacs-file-ignore-extensions
-      '(;; LaTeX
-        "aux"
-        "ptc"
-        "fdb_latexmk"
-        "fls"
-        "synctex.gz"
-        "toc"
-        ;; LaTeX - glossary
-        "glg"
-        "glo"
-        "gls"
-        "glsdefs"
-        "ist"
-        "acn"
-        "acr"
-        "alg"
-        ;; LaTeX - pgfplots
-        "mw"
-        ;; LaTeX - pdfx
-        "pdfa.xmpi"
-        ))
-
-(setq treemacs-file-ignore-globs
-      '(;; LaTeX
-        "*/_minted-*"
-        ;; AucTeX
-        "*/.auctex-auto"
-        "*/_region_.log"
-        "*/_region_.tex"))
-
-
-(use-package! org-download
-  :after org
-  :config
-  (setq-default org-download-image-dir "./images/"
-                org-download-screenshot-method "flameshot gui --raw > %s"
-                ;;org-download-screenshot-method "xclip -selection clipboard -t image/png -o > %s"
-                org-download-delete-image-after-download t
-                org-download-method 'directory
-                org-download-heading-lvl 1
-                org-image-actual-width 300
-                org-download-screenshot-file "/tmp/screenshot.png"
-                )
-  )
-
-
-(after! pyim
-  (if (display-graphic-p)
-      (setq pyim-page-tooltip 'posframe)
-    (setq pyim-page-tooltip 'popup)
-    )
-  (setq pyim-isearch-mode 1
-        default-input-method "pyim"
-        pyim-dicts `((:name greatdict :file ,(concat doom-user-dir "vendor/pyim/pyim-greatdict.pyim"))
-                     (:name sogou :file ,(concat doom-user-dir "vendor/pyim/sogou.pyim")))
-        pyim-default-scheme 'quanpin
-        pyim-english-input-switch-functions '(pyim-probe-isearch-mode)
-        pyim-page-length 6))
-
-
-(after! vterm
-  (set-popup-rule! "*doom:vterm-popup:.*" :size 0.25 :vslot -4 :select t :quit nil :ttl 0 :side 'bottom)
-  )
-
 
 (after! keyfreq
   (keyfreq-mode 1)
@@ -125,13 +28,161 @@
           next-line))
   )
 
-(after! pdf-view
-  ;; open pdfs scaled to fit page
-  (setq-default pdf-view-display-size 'fit-width)
-  (add-hook! 'pdf-view-mode-hook (evil-colemak-basics-mode -1))
-  ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t
-        pdf-view-resize-factor 1.1))
+;; custom module config
+(when (modulep! :completion company)
+  (after! company
+    (setq company-idle-delay 0
+          company-minimum-prefix-length 2
+          company-show-quick-access t
+          company-insertion-triggers t
+          company-dabbrev-downcase nil
+          company-selection-wrap-around t)
+    )
+  )
+
+
+(when (modulep! :checkers spell)
+  (setq ispell-hunspell-dict-paths-alist
+        `(("english" ,(concat doom-user-dir "vendor/words/dict-en-20221101_lo/en_US.aff"))))
+  (setq ispell-local-dictionary "english")
+  (setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+  )
+
+(when (modulep! :term eshell)
+  (use-package! esh-autosuggest
+    ;;:hook (eshell-mode . esh-autosuggest-mode))
+    ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
+    ;; line below instead:
+    :config
+    (add-hook 'eshell-mode-hook #'esh-autosuggest-mode -100))
+  )
+
+
+(when (modulep! :tools lsp)
+  (after! lsp-mode
+    (setq lsp-idle-delay 0.10
+          lsp-auto-configure t
+          lsp-enable-imenu t
+          lsp-enable-indentation t
+          lsp-enable-xref t
+          lsp-enable-snippet t
+          lsp-enable-file-watchers t
+          )
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'")
+    (lsp-register-custom-settings
+     '(("gopls.completeUnimported" t t)
+       ("gopls.staticcheck" t t))))
+  )
+
+(when (modulep! :ui treemacs)
+  ;; treemacs ignore files
+  (setq treemacs-file-ignore-extensions
+        '(;; LaTeX
+          "aux"
+          "ptc"
+          "fdb_latexmk"
+          "fls"
+          "synctex.gz"
+          "toc"
+          ;; LaTeX - glossary
+          "glg"
+          "glo"
+          "gls"
+          "glsdefs"
+          "ist"
+          "acn"
+          "acr"
+          "alg"
+          ;; LaTeX - pgfplots
+          "mw"
+          ;; LaTeX - pdfx
+          "pdfa.xmpi"
+          ))
+
+  (setq treemacs-file-ignore-globs
+        '(;; LaTeX
+          "*/_minted-*"
+          ;; AucTeX
+          "*/.auctex-auto"
+          "*/_region_.log"
+          "*/_region_.tex"))
+  )
+
+
+(when (modulep! :lang org)
+  (use-package! org-download
+    :after org
+    :config
+    (setq-default org-download-image-dir "./images/"
+                  org-download-screenshot-method "flameshot gui --raw > %s"
+                  ;;org-download-screenshot-method "xclip -selection clipboard -t image/png -o > %s"
+                  org-download-delete-image-after-download t
+                  org-download-method 'directory
+                  org-download-heading-lvl 1
+                  org-image-actual-width 300
+                  org-download-screenshot-file "/tmp/screenshot.png"
+                  )
+    )
+  (when (featurep! :lang org +roam2)
+    (use-package! websocket
+      :after org-roam)
+
+    (use-package! org-roam-ui
+      :after org-roam ;; or :after org
+      ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+      ;;         a hookable mode anymore, you're advised to pick something yourself
+      ;;         if you don't care about startup time, use
+      ;;  :hook (after-init . org-roam-ui-mode)
+      :config
+      (setq org-roam-ui-sync-theme t
+            org-roam-ui-follow t
+            org-roam-ui-update-on-save t
+            org-roam-ui-open-on-start t))
+    (use-package! org-roam-bibtex
+      :after (org-roam)
+      :hook (org-roam-mode . org-roam-bibtex-mode)
+      :config
+      (setq org-roam-bibtex-preformat-keywords
+            '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+      (setq orb-templates
+            '(("r" "ref" plain (function org-roam-capture--get-point)
+               ""
+               :file-name "${slug}"
+               :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
+
+- keywords :: ${keywords}
+
+\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+               :unnarrowed t))))
+    )
+  )
+
+
+(when (modulep! :input chinese)
+  (after! pyim
+    (if (display-graphic-p)
+        (setq pyim-page-tooltip 'posframe)
+      (setq pyim-page-tooltip 'popup)
+      )
+    (setq pyim-isearch-mode 1
+          default-input-method "pyim"
+          pyim-dicts `((:name greatdict :file ,(concat doom-user-dir "vendor/pyim/pyim-greatdict.pyim"))
+                       (:name sogou :file ,(concat doom-user-dir "vendor/pyim/sogou.pyim")))
+          pyim-default-scheme 'quanpin
+          pyim-english-input-switch-functions '(pyim-probe-isearch-mode)
+          pyim-page-length 6))
+  )
+
+(when (modulep! :tools pdf)
+  (after! pdf-view
+    ;; open pdfs scaled to fit page
+    (setq-default pdf-view-display-size 'fit-width)
+    (add-hook! 'pdf-view-mode-hook (evil-colemak-basics-mode -1))
+    ;; automatically annotate highlights
+    (setq pdf-annot-activate-created-annotations t
+          pdf-view-resize-factor 1.1))
+  )
 
 (when (modulep! :lang latex)
   (use-package! company-math
@@ -198,45 +249,18 @@
         '(("dmath" ?e nil nil t)))
   )
 
-(use-package! org-roam-bibtex
-  :after (org-roam)
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (setq org-roam-bibtex-preformat-keywords
-        '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
-  (setq orb-templates
-        '(("r" "ref" plain (function org-roam-capture--get-point)
-           ""
-           :file-name "${slug}"
-           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
-
-- keywords :: ${keywords}
-
-\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
-
-           :unnarrowed t))))
-
-
-;; Allow Emacs to access content from clipboard.
-(setq x-select-enable-clipboard t
-      x-select-enable-primary t)
-
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-(setq mouse-wheel-progressive-speed 't)
-(setq mouse-wheel-follow-mouse 't)
-(setq scroll-step 2)
-
-
-(use-package! tree-sitter
-  :hook (prog-mode . turn-on-tree-sitter-mode)
-  :hook (tree-sitter-after-on . tree-sitter-hl-mode)
-  :config
-  (require 'tree-sitter-langs)
-  ;; This makes every node a link to a section of code
-  (setq tree-sitter-debug-jump-buttons t
-        ;; and this highlights the entire sub tree in your code
-        tree-sitter-debug-highlight-jump-region t)
+(when (modulep! :tools tree-sitter)
+  (use-package! tree-sitter
+    :hook (prog-mode . turn-on-tree-sitter-mode)
+    :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+    :config
+    (require 'tree-sitter-langs)
+    ;; This makes every node a link to a section of code
+    (setq tree-sitter-debug-jump-buttons t
+          ;; and this highlights the entire sub tree in your code
+          tree-sitter-debug-highlight-jump-region t)
+    )
   )
 
-(provide 'xcfg)
-;;; xcfg.el
+(provide '+misc)
+;;; +misc.el

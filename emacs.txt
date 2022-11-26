@@ -90,5 +90,9 @@ make NATIVE_FULL_AOT=1 PATH=$PATH:$HOME/.cargo/bin -j$(($(nproc) * 2))
 
 
 # latest
-sudo apt-get install libjansson4 libjansson-dev
+sudo apt-get install libjansson4 libjansson-dev  libxaw7-dev  libxmp-dev libwebp-dev libtree-sitter-dev
 ./configure --prefix=/usr/local --with-native-compilation  --with-pdumper=yes --with-dumping=pdumper --with-json --with-gnutls --with-jpeg --with-png --with-rsvg --with-tiff --with-wide-int --with-xft --with-xml2 --with-xpm --with-modules=yes --with-x=yes --with-x-toolkit=gtk3 --with-xwidgets=yes 'CPPFLAGS=-Wdate-time -D_FORTIFY_SOURCE=2' 'LDFLAGS=-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro'
+
+# emacs 29
+./configure --prefix=/opt/local --with-native-compilation  --with-tree-sitter --with-pdumper=yes --with-dumping=pdumper --with-json --with-gnutls --with-jpeg --with-png --with-rsvg --with-tiff --with-wide-int --with-xft --with-xml2 --with-xpm --with-modules=yes --with-pgtk=yes --with-xwidgets=yes 'CPPFLAGS=-
+Wdate-time -D_FORTIFY_SOURCE=2' 'LDFLAGS=-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro'

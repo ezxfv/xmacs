@@ -47,7 +47,7 @@
                                         ;(unpin! t)
 ;; (package! flycheck-inline)
 ;; (package! smart-hungry-delete)
-;; (package! move-text)
+(package! move-text)
 ;; (package! parrot)
 (package! youdao-dictionary)
 ;; (package! link-hint)
@@ -61,10 +61,23 @@
 (package! valign)
 (package! gotest)
 (package! keyfreq)
-(package! org-roam-bibtex)
-(package! esh-autosuggest)
+
+(when (featurep! :term eshell)
+  (package! esh-autosuggest)
+  )
 
 (when (featurep! :tools debugger +lsp)
   (package! dap-mode-launch-json
     :recipe (:host github :repo "nbfalcon/dap-mode-launch-json"))
+  )
+
+(when (featurep! :lang org +roam2)
+  (unpin! org-roam)
+  (package! org-roam-ui)
+  (package! org-roam-bibtex)
+  )
+
+(when (modulep! :completion vertico)
+  (package! consult-projectile
+    :recipe (:host gitlab :repo "OlMon/consult-projectile" :branch "master"))
   )

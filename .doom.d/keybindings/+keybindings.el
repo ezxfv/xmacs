@@ -131,6 +131,7 @@
 
 (map! :leader
       "/" #'+default/search-project
+      "SPC" #'consult-projectile-find-file
       :desc "Open any file" "a" #'ido-find-file
       (:prefix ("d" . "debug")
        (:prefix ("b" . "breakpoint")
@@ -139,12 +140,7 @@
         "d" #'dap-breakpoint-delete
         "t" #'dap-breakpoint-toggle)
        "d" #'dap-debug
-       "t" #'dap-debug-edit-template)
-      (:prefix ("e" . "edit")
-       "b" #'move-beginning-of-line
-       "e" #'move-end-of-line)
-      (:prefix ("i" . "ivy")
-       "t" #'ivy-taskrunner))
+       "t" #'dap-debug-edit-template))
 
 (map! (:leader (:desc "open window 0" :g "0" #'treemacs-select-window)) )
 
@@ -226,5 +222,3 @@
              ns-option-modifier        'meta
              mac-right-option-modifier 'none
              ns-right-option-modifier  'none)))
-
-(provide 'xkey)
