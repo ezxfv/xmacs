@@ -13,7 +13,7 @@
   (add-hook 'before-save-hook #'+eglot-organize-imports -80 t))
 
 
-(if (featurep! :tools lsp +eglot)
+(if (modulep! :tools lsp +eglot)
     (progn 
       (after! go-mode
         (add-hook 'go-mode-hook #'eglot-go-install-save-hooks)))

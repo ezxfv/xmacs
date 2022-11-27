@@ -1,7 +1,7 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (plist-put +popup-defaults :modeline t)
 (setq fancy-splash-image "~/.doom.d/banner/hack.png")
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-snazzy)
 ;; (if (display-graphic-p)
 ;;     ;; gui mode
 ;;     (progn

@@ -9,32 +9,6 @@
 (setq doom-localleader-key ",")
 (setq doom-localleader-alt-key "M-,")
 
-;; multiple cursors hydra
-(defhydra hydra-multiple-cursors (:color blue :hint nil)
-  "
- Up^^             Down^^           Miscellaneous           % 2(mc/num-cursors) cursor%s(if (> (mc/num-cursors) 1) \"s\" \"\")
-------------------------------------------------------------------
- [_p_]   Next     [_n_]   Next     [_l_] Edit lines  [_0_] Insert numbers
- [_P_]   Skip     [_N_]   Skip     [_a_] Mark all    [_A_] Insert letters
- [_M-p_] Unmark   [_M-n_] Unmark   [_s_] Search
- [Click] Cursor at point       [_q_] Quit"
-  ("l" mc/edit-lines :exit t)
-  ("a" mc/mark-all-like-this :exit t)
-  ("n" mc/mark-next-like-this)
-  ("N" mc/skip-to-next-like-this)
-  ("M-n" mc/unmark-next-like-this)
-  ("p" mc/mark-previous-like-this)
-  ("P" mc/skip-to-previous-like-this)
-  ("M-p" mc/unmark-previous-like-this)
-  ("s" mc/mark-all-in-region-regexp :exit t)
-  ("0" mc/insert-numbers :exit t)
-  ("A" mc/insert-letters :exit t)
-  ("<mouse-1>" mc/add-cursor-on-click)
-  ;; Help with click recognition in this hydra
-  ("<down-mouse-1>" ignore)
-  ("<drag-mouse-1>" ignore)
-  ("q" nil))
-
 (map! :niv      "C-s" nil
       :niv      "C-d" nil
       :niv      "C-i" nil
@@ -51,25 +25,15 @@
       [remap xref-find-definitions] #'lsp-ui-peek-find-definitions
       [remap xref-find-references] #'lsp-ui-peek-find-references)
 
-(global-set-key (kbd "<f3>") 'hydra-multiple-cursors/body)
-(global-set-key (kbd "<f5>") 'deadgrep)
-(global-set-key (kbd "<M-f5>") 'deadgrep-kill-all-buffers)
 (global-set-key (kbd "<f12>") 'smerge-vc-next-conflict)
-(global-set-key (kbd "<f11>") '+vc/smerge-hydra/body)
 (global-set-key (kbd "C-\\") 'toggle-input-method)
 (global-set-key (kbd "<f9>") 'sdcv-search-pointer+)
 
 (map!
- "C-'"     #'imenu-list-smart-toggle
- "C-d"     (cmd! (previous-line)
-                 (kill-line)
-                 (forward-line))
+ "C-c d"     (cmd! (previous-line)
+                   (kill-line)
+                   (forward-line))
  "C-s"     #'+default/search-buffer
-
- ;; smartparen
- "C-("     #'sp-backward-slurp-sexp
- "C-)"     #'sp-forward-slurp-sexp
-
 
  ;; multiple cursors
  "C->"     #'mc/mark-next-like-this
@@ -82,9 +46,8 @@
  "C-S-c S" #'mc/mark-all-in-region-regexp
 
  ;; prefix C-c
+ ;;
  "C-c a c"     #'org-mac-chrome-insert-frontmost-url
- "C-c d"       #'insert-current-date-time
- "C-c t"       #'insert-current-time
  "C-c o"       #'crux-open-with
  "C-c r"       #'vr/replace
  "C-c q"       #'vr/query-replace
@@ -115,18 +78,13 @@
  :desc "Previous flycheck error" :n "fp" #'flycheck-previous-error
  :desc "Format buffer"          :n "fb" #'+format/buffer
  :desc "Save buffer"            :n "fs" #'save-buffer
- :desc "Comment region"         :n "mc" #'comment-or-uncomment-region
- :desc "Delete to end"          :nv "me" #'evil-delete-line
  :desc "Mark fun"               :nv "mf" #'mark-defun
  :desc "Delete to begin"        :nv "mh" #'evil-delete-line-forward
  :desc "Multiedit match all"    :nv "mma" #'evil-multiedit-match-all
- :desc "Sort Python Imports"    :n "mo" #'+python/optimize-imports
  :desc "Select checker"         :n "ms" #'flycheck-select-checker
- :desc "Toggle vterm"           :n "mt" #'+vterm/toggle
  :desc "M-x"                    :n "mx" #'execute-extended-command
  :desc "Zen mode"               :n "mz" #'+zen/toggle-fullscreen
  :desc "Comment or Uncomment Line" :nv ";" #'evilnc-comment-or-uncomment-lines
- :desc "Exec cmd async"         :nv "mai" 'async-exec-from-input
  )
 
 (map! :leader
@@ -134,15 +92,13 @@
       "SPC" #'consult-projectile-find-file
       :desc "Open any file" "a" #'ido-find-file
       (:prefix ("d" . "debug")
-       (:prefix ("b" . "breakpoint")
-        "a" #'dap-breakpoint-add
-        "c" #'dap-breakpoint-condition
-        "d" #'dap-breakpoint-delete
-        "t" #'dap-breakpoint-toggle)
-       "d" #'dap-debug
-       "t" #'dap-debug-edit-template))
-
-(map! (:leader (:desc "open window 0" :g "0" #'treemacs-select-window)) )
+               (:prefix ("b" . "breakpoint")
+                        "a" #'dap-breakpoint-add
+                        "c" #'dap-breakpoint-condition
+                        "d" #'dap-breakpoint-delete
+                        "t" #'dap-breakpoint-toggle)
+               "d" #'dap-debug
+               "t" #'dap-debug-edit-template))
 
 (map! :leader
       "0" 'treemacs-select-window
@@ -154,45 +110,45 @@
       "9" 'split-window-right
       )
 
-;;(after! org
-;; (map! :localleader
-;;       :map org-mode-map
-;;       :desc "Eval Block" "e" 'ober-eval-block-in-repl
-;;       (:prefix "r"
-;;        :desc "Tags" "t" 'org-set-tags
-;;        :desc "Roam Bibtex" "b" 'orb-note-actions
-;;        (:prefix ("p" . "Properties")
-;;         :desc "Set" "s" 'org-set-property
-;;         :desc "Delete" "d" 'org-delete-property
-;;         :desc "Actions" "a" 'org-property-action
-;;         )
-;;        )
-;;       (:prefix ("i" . "Insert")
-;;        :desc "Link/Image" "l" 'org-insert-link
-;;        :desc "Item" "o" 'org-toggle-item
-;;        :desc "Citation" "c" 'org-ref-helm-insert-cite-link
-;;        :desc "Footnote" "f" 'org-footnote-action
-;;        :desc "Table" "t" 'org-table-create-or-convert-from-region
-;;        :desc "Screenshot" "s" 'org-download-screenshot
-;;        (:prefix ("m" . "Math")
-;;         :desc "Bold" "f" 'org-make-bold-math
-;;         :desc "Blackboard" "b" 'org-make-blackboard-math
-;;         :desc "Vert" "v" 'org-make-vert-math
-;;         )
-;;        (:prefix ("h" . "Headings")
-;;         :desc "Normal" "h" 'org-insert-heading
-;;         :desc "Todo" "t" 'org-insert-todo-heading
-;;         (:prefix ("s" . "Subheadings")
-;;          :desc "Normal" "s" 'org-insert-subheading
-;;          :desc "Todo" "t" 'org-insert-todo-subheading
-;;          )
-;;         )
-;;        (:prefix ("e" . "Exports")
-;;         :desc "Dispatch" "d" 'org-export-dispatch
-;;         )
-;;        )
-;;       )
-;; )
+(after! org
+  (map! :localleader
+        :map org-mode-map
+        :desc "Eval Block" "e" 'ober-eval-block-in-repl
+        (:prefix "s"
+         :desc "Tags" "t" 'org-set-tags
+         :desc "Roam Bibtex" "b" 'orb-note-actions
+         (:prefix ("p" . "Properties")
+          :desc "Set" "s" 'org-set-property
+          :desc "Delete" "d" 'org-delete-property
+          :desc "Actions" "a" 'org-property-action
+          )
+         )
+        (:prefix ("l" . "Insert")
+         :desc "Link/Image" "l" 'org-insert-link
+         :desc "Item" "o" 'org-toggle-item
+         :desc "Citation" "c" 'org-ref-helm-insert-cite-link
+         :desc "Footnote" "f" 'org-footnote-action
+         :desc "Table" "t" 'org-table-create-or-convert-from-region
+         :desc "Screenshot" "s" 'org-download-screenshot
+         (:prefix ("m" . "Math")
+          :desc "Bold" "f" 'org-make-bold-math
+          :desc "Blackboard" "b" 'org-make-blackboard-math
+          :desc "Vert" "v" 'org-make-vert-math
+          )
+         (:prefix ("h" . "Headings")
+          :desc "Normal" "h" 'org-insert-heading
+          :desc "Todo" "t" 'org-insert-todo-heading
+          (:prefix ("s" . "Subheadings")
+           :desc "Normal" "s" 'org-insert-subheading
+           :desc "Todo" "t" 'org-insert-todo-subheading
+           )
+          )
+         (:prefix ("e" . "Exports")
+          :desc "Dispatch" "d" 'org-export-dispatch
+          )
+         )
+        )
+  )
 
 (map! :localleader
       :map markdown-mode-map
