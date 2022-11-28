@@ -262,5 +262,12 @@
     )
   )
 
+(when (modulep! :x doom-meow)
+  (setq meow-use-clipboard t)
+  (setq doom-localleader-alt-key "C-l")
+  (map! :map meow-leader-keymap
+        "l" #'meow-keypad-start)
+  )
+
 (provide '+misc)
 ;;; +misc.el
