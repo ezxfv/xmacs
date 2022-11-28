@@ -1,29 +1,23 @@
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(plist-put +popup-defaults :modeline t)
-(setq fancy-splash-image "~/.doom.d/banner/hack.png")
-(setq doom-theme 'doom-snazzy)
-;; (if (display-graphic-p)
-;;     ;; gui mode
-;;     (progn
-;;       (setq doom-theme 'doom-one)
-;;       (setq doom-themes-treemacs-theme "doom-colors")
-;;       ;; (after! evil
-;;       ;;   (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
-;;       ;;   (setq evil-normal-state-cursor '(box "dark red")
-;;       ;;         red-insert-state-cursor '(bar "black")
-;;       ;;         evil-visual-state-cursor '(hollow "orange"))
-;;       ;;   )
-;;       ;; (after! flycheck
-;;       ;;   (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
-;;       )
-;;     ;; terminal mode
-;;     (setq doom-theme 'doom-material-dark)
-;;     (setq doom-themes-treemacs-theme "doom-colors")
-;;     (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
-;;     (setq evil-normal-state-cursor '(box "dark red")
-;;           red-insert-state-cursor '(bar "black")
-;;           evil-visual-state-cursor '(hollow "orange"))
-;;   )
+(if (display-graphic-p)
+    ;; gui mode
+    (progn
+      (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+      (plist-put +popup-defaults :modeline t)
+      (setq fancy-splash-image "~/.doom.d/banner/hack.png")
+      (setq doom-theme 'doom-snazzy)
+      (setq doom-themes-treemacs-theme "doom-colors")
+      ;; (after! evil
+      ;;   (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
+      ;;   (setq evil-normal-state-cursor '(box "dark red")
+      ;;         red-insert-state-cursor '(bar "black")
+      ;;         evil-visual-state-cursor '(hollow "orange"))
+      ;;   )
+      ;; (after! flycheck
+      ;;   (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+      )
+  ;; terminal mode
+  (setq doom-theme 'doom-dark+)
+  )
 
 ;; (after! dap-mode
 ;;   (custom-set-faces

@@ -80,8 +80,8 @@
 
        :checkers
        (syntax +childframe)              ; tasing you for every semicolon you forget
-       (spell +flyspell +hunspell +everywhere) ; tasing you for misspelling mispelling
-       grammar           ; tasing grammar mistake every you make
+       ;; (spell +flyspell +hunspell +everywhere) ; tasing you for misspelling mispelling
+       ;; grammar           ; tasing grammar mistake every you make
 
        :tools
        ;;ansible

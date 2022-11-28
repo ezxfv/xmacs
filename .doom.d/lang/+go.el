@@ -13,10 +13,13 @@
   (add-hook 'before-save-hook #'+eglot-organize-imports -80 t))
 
 
-(if (modulep! :tools lsp +eglot)
-    (progn 
-      (after! go-mode
-        (add-hook 'go-mode-hook #'eglot-go-install-save-hooks)))
-  (after! go-mode
-    (add-hook 'go-mode-hook 'lsp-deferred)
-    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)))
+(when (modulep! :lang go)
+  (setq flycheck-golangci-lint-config (concat doom-user-dir "vendor/golangci.yml"))
+  (if (modulep! :tools lsp +eglot)
+      (progn
+        (after! go-mode
+          (add-hook 'go-mode-hook #'eglot-go-install-save-hooks)))
+    (after! go-mode
+      (add-hook 'go-mode-hook 'lsp-deferred)
+      (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)))
+  )
