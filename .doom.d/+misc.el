@@ -1,6 +1,7 @@
 ;; general config
 (setq-default history-length 999)
 (setq-default prescient-history-length 1000)
+(setq native-comp-async-report-warnings-errors nil)
 
 ;; Allow Emacs to access content from clipboard.
 (setq x-select-enable-clipboard t
