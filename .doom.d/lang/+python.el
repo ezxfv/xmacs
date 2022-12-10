@@ -22,7 +22,7 @@
     :multi-root t
     :initialized-fn (lambda (workspace)
                       (with-lsp-workspace workspace
-                        (lsp--set-configuration (lsp-configuration-section "python"))))
+                                          (lsp--set-configuration (lsp-configuration-section "python"))))
     :notification-handlers (lsp-ht ("pyright/beginProgress" 'ignore)
                                    ("pyright/reportProgress" 'ignore)
                                    ("pyright/endProgress" 'ignore))))
@@ -34,7 +34,6 @@
 ;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
 ;; this way:
 (add-hook 'python-mode-local-vars-hook (lambda ()
-                                         (flycheck-mode 1)
                                          (semantic-mode 1)
                                          (when (file-directory-p "~/.pyenv/versions/inf")
                                            (setq lsp-pyright-venv-path "~/.pyenv/versions/inf")
@@ -46,15 +45,18 @@
                                            )
                                          (setq python-shell-interpreter "ipython"
                                                python-shell-interpreter-args "-i"
-                                               flycheck-python-pycompile-executable "python3"
-                                               flycheck-python-pylint-executable "python3"
-                                               flycheck-python-flake8-executable "python3"
-                                               flycheck-python-pycompile-executable "python3"
                                                doom-modeline-env-python-executable "python3"
                                                lsp-pyls-plugins-autopep8-enabled t
                                                lsp-pyls-plugins-pycodestyle-enabled t
                                                lsp-pyls-plugins-flake8-max-line-length 120
                                                lsp-pyright-auto-import-completions t)
                                          (add-to-list 'python-shell-completion-native-disabled-interpreters "python3")
-                                         (flycheck-add-next-checker 'python-pyright '(warning . python-pylint))
-                                         (flycheck-select-checker 'python-pyright)))
+                                         (when (modulep! :tools syntax)
+                                           (setq
+                                            flycheck-python-pycompile-executable "python3"
+                                            flycheck-python-pylint-executable "python3"
+                                            flycheck-python-flake8-executable "python3"
+                                            flycheck-python-pycompile-executable "python3")
+                                           (flycheck-mode 1)
+                                           (flycheck-add-next-checker 'python-pyright '(warning . python-pylint))
+                                           (flycheck-select-checker 'python-pyright))))
