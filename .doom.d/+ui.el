@@ -1,3 +1,7 @@
+(after! doom-themes
+  (load-theme 'doom-nano-light t)
+  (load-theme 'doom-nano-dark t))
+
 (if (display-graphic-p)
     ;; gui mode
     (progn
@@ -14,6 +18,13 @@
       ;;   )
       ;; (after! flycheck
       ;;   (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+      ;;(load-theme 'doom-nano-light t)
+      ;;(load-theme 'doom-nano-dark t)
+      ;;(setq doom-theme 'doom-nane-light)
+      ;; (use-package! doom-nano-modeline
+      ;;   :config
+      ;;   (doom-nano-modeline-mode 1)
+      ;;   (global-hide-mode-line-mode 1))
       )
   ;; terminal mode
   (setq doom-theme 'doom-dark+)

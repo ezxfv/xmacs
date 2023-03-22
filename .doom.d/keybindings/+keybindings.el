@@ -52,7 +52,7 @@
  "C-c r"       #'vr/replace
  "C-c q"       #'vr/query-replace
  "C-c u"       #'crux-view-url
- "C-c y"       #'youdao-dictionary-search-at-point+
+ ;;"C-c y"       #'youdao-dictionary-search-at-point+
 
  "C-c C-f"     #'json-mode-beautify
 

@@ -49,7 +49,7 @@
 ;; (package! smart-hungry-delete)
 (package! move-text)
 ;; (package! parrot)
-(package! youdao-dictionary)
+;;(package! youdao-dictionary)
 ;; (package! link-hint)
 (package! visual-regexp)
 (package! visual-regexp-steriods
@@ -61,6 +61,9 @@
 (package! valign)
 (package! gotest)
 (package! keyfreq)
+(package! doom-nano-modeline
+  :recipe (:host github
+  :repo "ronisbr/doom-nano-modeline"))
 
 (when (featurep! :term eshell)
   (package! esh-autosuggest)
