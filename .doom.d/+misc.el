@@ -270,5 +270,10 @@
         "l" #'meow-keypad-start)
   )
 
+;;(require 'ol)
+;;(use-package! crosshairs)
+;;(use-package! bookmark+)
+(use-package! thing-edit)
+
 (provide '+misc)
 ;;; +misc.el

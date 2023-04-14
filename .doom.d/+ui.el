@@ -1,6 +1,6 @@
-(after! doom-themes
-  (load-theme 'doom-nano-light t)
-  (load-theme 'doom-nano-dark t))
+;; (after! doom-themes
+;;   (load-theme 'doom-nano-light t)
+;;   (load-theme 'doom-nano-dark t))
 
 (if (display-graphic-p)
     ;; gui mode
@@ -8,7 +8,7 @@
       (add-to-list 'initial-frame-alist '(fullscreen . maximized))
       (plist-put +popup-defaults :modeline t)
       (setq fancy-splash-image "~/.doom.d/banner/hack.png")
-      (setq doom-theme 'doom-snazzy)
+      (setq doom-theme 'doom-one-light)
       (setq doom-themes-treemacs-theme "doom-colors")
       ;; (after! evil
       ;;   (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))

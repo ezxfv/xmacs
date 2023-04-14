@@ -64,6 +64,15 @@
 (package! doom-nano-modeline
   :recipe (:host github
   :repo "ronisbr/doom-nano-modeline"))
+(package! bookmark-plus
+  :recipe (:host github
+  :repo "emacsmirror/bookmark-plus"))
+(package! crosshairs
+  :recipe (:host github
+  :repo "emacsmirror/crosshairs"))
+(package! thing-edit
+  :recipe (:host github
+  :repo "manateelazycat/thing-edit"))
 
 (when (featurep! :term eshell)
   (package! esh-autosuggest)

@@ -205,6 +205,6 @@
        :x
        english
        ;;(doom-meow +qwerty +override +leader)
-       ;;copilot
+       copilot
        ;;tabnine
 )
