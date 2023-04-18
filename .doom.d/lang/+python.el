@@ -42,6 +42,7 @@
                                          (when (getenv "CONDA_PREFIX_1")
                                            (setq conda-anaconda-home (getenv "CONDA_PREFIX_1"))
                                            (setq conda-env-autoactivate-mode 1)
+                                           (conda-env-activate "gitops")
                                            )
                                          (setq python-shell-interpreter "ipython"
                                                python-shell-interpreter-args "-i"

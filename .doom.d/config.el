@@ -53,6 +53,7 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 ;; ref: https://www.cheng92.com/emacs/doom-emacs-with-org/
+(load! "+func")
 (load! "+ui")
 (load! "+misc")
 (load! "keybindings/+keybindings")

@@ -56,7 +56,8 @@
 
  "C-c C-f"     #'json-mode-beautify
 
- :niv      "C-e"     #'evil-end-of-line
+ ;; :niv      "C-e"     #'evil-end-of-line
+ :niv      "C-e"     #'move-to-end-of-line
  :niv      "C--"     #'cnfonts-decrease-fontsize
  :niv      "C-+"     #'cnfonts-increase-fontsize
  :niv      "C-="     #'er/expand-region

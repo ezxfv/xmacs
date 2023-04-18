@@ -3,7 +3,7 @@
 (use-package! copilot
   :bind
   (:map copilot-mode-map
-   ("C-e" . 'copilot-accept-or-forward)
+   ("M-e" . 'copilot-accept-or-forward)
    ("M-n" . 'copilot-next-completion)
    ("M-p" . 'copilot-previous-completion))
   :config

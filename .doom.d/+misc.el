@@ -2,6 +2,7 @@
 (setq-default history-length 999)
 (setq-default prescient-history-length 1000)
 (setq native-comp-async-report-warnings-errors nil)
+;; (setq max-lisp-eval-depth 4096)
 
 ;; Allow Emacs to access content from clipboard.
 (setq x-select-enable-clipboard t
@@ -69,7 +70,8 @@
           lsp-enable-snippet t
           lsp-enable-file-watchers t
           )
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'")
+    (add-to-list 'lsp-file-watch-ignored-files '("[/\\\\]\\vendor\\'" "[/\\\\]\\third_party\\'" "[/\\\\]\\build\\'"))
+    (setq lsp-enable-file-watchers nil)
     (lsp-register-custom-settings
      '(("gopls.completeUnimported" t t)
        ("gopls.staticcheck" t t))))
