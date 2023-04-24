@@ -207,4 +207,5 @@
        ;;(doom-meow +qwerty +override +leader)
        copilot
        ;;tabnine
+       eaf
 )
