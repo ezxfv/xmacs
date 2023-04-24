@@ -86,6 +86,7 @@
  :desc "M-x"                    :n "mx" #'execute-extended-command
  :desc "Zen mode"               :n "mz" #'+zen/toggle-fullscreen
  :desc "Comment or Uncomment Line" :nv ";" #'evilnc-comment-or-uncomment-lines
+ :desc "Goto tab in group"      :nv "mt" #'my/switch-to-tab-in-group
  )
 
 (map! :leader
