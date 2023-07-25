@@ -204,8 +204,8 @@
 
        :x
        english
-       ;;(doom-meow +qwerty +override +leader)
-       copilot
+       ;;copilot
+       ;; lsp-bridge
        ;;tabnine
-       eaf
+       ;;eaf
 )

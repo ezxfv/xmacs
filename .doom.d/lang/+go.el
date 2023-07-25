@@ -22,6 +22,7 @@
           (add-hook 'go-mode-hook #'eglot-go-install-save-hooks)))
     (after! go-mode
       (setq flycheck-golangci-lint-fast t)
+      (setq go-test-args '("-v" "--count=1"))
       (setq flycheck-golangci-lint-config (concat doom-user-dir "vendor/golangci.yml"))
       (add-hook 'go-mode-hook 'lsp-deferred)
       (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)))

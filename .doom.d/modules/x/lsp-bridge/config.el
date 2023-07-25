@@ -12,4 +12,5 @@
         "j"             #'lsp-bridge-find-def)
   (require 'yasnippet)
   (yas-global-mode 1)
+  (setq acm-enable-codeium t)
   (global-lsp-bridge-mode))

@@ -19,21 +19,21 @@
   (setq sdcv-dictionary-data-dir (concat doom-user-dir "vendor/dicts/"))   ;; set local sdcv dict to search word
   )
 
-(use-package! company-english-helper
-  :init
-  (setq company-english-helper-fuzz-search-p t)
-  (add-hook! '(text-mode-hook
-               org-mode-hook
-               latex-mode-hook
-               markdown-mode-hook)
-             #'toggle-company-english-helper)
-  (map!
-   :desc "Translate helper" :nvi "C-c C-t" #'toggle-company-english-helper))
+;; (use-package! company-english-helper
+;;   :init
+;;   (setq company-english-helper-fuzz-search-p t)
+;;   (add-hook! '(text-mode-hook
+;;                org-mode-hook
+;;                latex-mode-hook
+;;                markdown-mode-hook)
+;;              #'toggle-company-english-helper)
+;;   (map!
+;;    :desc "Translate helper" :nvi "C-c C-t" #'toggle-company-english-helper))
 
-(use-package! insert-translated-name
-  :init
-  (setq insert-translated-name-camel-style-mode-list '(go-mode latex-mode))
-  (setq insert-translated-name-underline-style-mode-list '(python-mode ruby-mode))
-  (setq insert-translated-name-translate-engine 'youdao)
-  (map!
-   :desc "Translate insert" :nvi "C-c C-e" #'insert-translated-name-insert))
+;; (use-package! insert-translated-name
+;;   :init
+;;   (setq insert-translated-name-camel-style-mode-list '(go-mode latex-mode))
+;;   (setq insert-translated-name-underline-style-mode-list '(python-mode ruby-mode))
+;;   (setq insert-translated-name-translate-engine 'youdao)
+;;   (map!
+;;    :desc "Translate insert" :nvi "C-c C-e" #'insert-translated-name-insert))

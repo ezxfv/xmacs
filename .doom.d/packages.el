@@ -63,16 +63,23 @@
 (package! keyfreq)
 (package! doom-nano-modeline
   :recipe (:host github
-  :repo "ronisbr/doom-nano-modeline"))
+           :repo "ronisbr/doom-nano-modeline"))
 (package! bookmark-plus
   :recipe (:host github
-  :repo "emacsmirror/bookmark-plus"))
+           :repo "emacsmirror/bookmark-plus"))
 (package! crosshairs
   :recipe (:host github
-  :repo "emacsmirror/crosshairs"))
+           :repo "emacsmirror/crosshairs"))
+(package! exec-path-from-shell
+  :recipe (:host github
+           :repo "purcell/exec-path-from-shell"))
 (package! thing-edit
   :recipe (:host github
-  :repo "manateelazycat/thing-edit"))
+           :repo "manateelazycat/thing-edit"))
+(package! color-rg
+  :recipe (:host github
+           :repo "manateelazycat/color-rg"))
+(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
 
 (when (featurep! :term eshell)
   (package! esh-autosuggest)

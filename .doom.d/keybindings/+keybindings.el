@@ -55,7 +55,7 @@
  ;;"C-c y"       #'youdao-dictionary-search-at-point+
 
  "C-c C-f"     #'json-mode-beautify
-
+ "C-c C-r"     #'plantuml-preview-region
  ;; :niv      "C-e"     #'evil-end-of-line
  :niv      "C-e"     #'move-to-end-of-line
  :niv      "C--"     #'cnfonts-decrease-fontsize
