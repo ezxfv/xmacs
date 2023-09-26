@@ -79,9 +79,6 @@
 (package! color-rg
   :recipe (:host github
            :repo "manateelazycat/color-rg"))
-(package! thing-edit
-  :recipe (:host github
-
 (package! codeium
   :recipe (:host github
            :repo "Exafunction/codeium.el"))
