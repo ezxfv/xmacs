@@ -272,12 +272,10 @@
         "l" #'meow-keypad-start)
   )
 
-;;(require 'ol)
+(require 'ol)
 (use-package! crosshairs)
-;;(use-package! bookmark+)
+(use-package! bookmark+)
 (use-package! thing-edit)
-(use-package! exec-path-from-shell)
-(use-package! color-rg)
 (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
 
 ;; we recommend using use-package to organize your init.el

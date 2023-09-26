@@ -59,7 +59,7 @@
 (package! pangu-spacing)
 (package! cnfonts)
 (package! valign)
-(package! gotest)
+;; (package! gotest)
 (package! keyfreq)
 (package! doom-nano-modeline
   :recipe (:host github
@@ -70,27 +70,27 @@
 (package! crosshairs
   :recipe (:host github
            :repo "emacsmirror/crosshairs"))
-(package! exec-path-from-shell
-  :recipe (:host github
-           :repo "purcell/exec-path-from-shell"))
+;; (package! exec-path-from-shell
+;;   :recipe (:host github
+;;            :repo "purcell/exec-path-from-shell"))
 (package! thing-edit
   :recipe (:host github
            :repo "manateelazycat/thing-edit"))
-(package! color-rg
-  :recipe (:host github
-           :repo "manateelazycat/color-rg"))
+;(package! color-rg
+;  :recipe (:host github
+;           :repo "manateelazycat/color-rg"))
 (package! codeium
   :recipe (:host github
            :repo "Exafunction/codeium.el"))
 
-(when (featurep! :term eshell)
-  (package! esh-autosuggest)
-  )
+;; (when (featurep! :term eshell)
+;;   (package! esh-autosuggest)
+;;   )
 
-(when (featurep! :tools debugger +lsp)
-  (package! dap-mode-launch-json
-    :recipe (:host github :repo "nbfalcon/dap-mode-launch-json"))
-  )
+;; (when (featurep! :tools debugger +lsp)
+;;   (package! dap-mode-launch-json
+;;     :recipe (:host github :repo "nbfalcon/dap-mode-launch-json"))
+;;   )
 
 (when (featurep! :lang org +roam2)
   (unpin! org-roam)
