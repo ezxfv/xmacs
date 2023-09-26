@@ -1,0 +1,94 @@
+ 1389  cd github
+ 1391  git clone https://github.com/gojue/ecapture.git
+ 1392  cd ecapture
+ 1393  go mod download
+ 1439  make all
+ 1445  apt-file find bpftool
+ 1446  apt-file find bpftool | grep bin/bpftool
+ 1447  sudo apt install linux-tools-common
+ 1448  make all
+ 1449  ls linux-tools-5.15.90.1-microsoft-standard-WSL2
+ 1450  sudo apt dist-upgrade
+ 1451  cat .netrc
+ 1452  cd github/WSL2-Linux-Kernel
+ 1453  git log
+ 1454  cat .config
+ 1455  uname -r
+ 1456  sudo apt remove linux-modules-5.15.0-67-generic
+ 1457  git pull
+ 1458  export KERNELRELEASE=`uname -r`
+ 1459  echo $KERNELRELEASE
+ 1460  make KERNELRELEASE=$KERNELRELEASE -j 12
+ 1461  apt-file find libcrypto.so
+ 1462  apt-file find libcrypto.so.1.1
+ 1463  ldconfig
+ 1464  sudo ldconfig
+ 1465  make KERNELRELEASE=$KERNELRELEASE -j 12
+ 1466  vim scripts/extract-cert
+ 1467  file scripts/extract-cert
+ 1468  ldd scripts/extract-cert
+ 1469  cd ../
+ 1470  wget https://www.openssl.org/source/openssl-1.1.1t.tar.gz
+ 1471  rtar -zxf openssl-1.1.1t.tar.gz
+ 1472  tar -zxf openssl-1.1.1t.tar.gz
+ 1473  cd openssl-1.1.1t
+ 1474  ls
+ 1475  cat INSTALL
+ 1476  make all
+ 1477  make
+ 1478  ./Configurations
+ 1479  cd ../
+ 1480  ls
+ 1481  ls -la
+ 1482  cat INSTALL
+ 1483  cat README
+ 1484  cat INSTALL
+ 1485  make all
+ 1486  ls
+ 1487  cd ssl
+ 1488  ls
+ 1489  cd ../
+ 1490  tree -f | grep Makefile
+ 1491  ./config
+ 1492  ls
+ 1493  make all
+ 1494  tree -f | grep libcrypto
+ 1495  ls -la
+ 1496  export LD_LIBRARY_PATH=$PATH:`pwd`
+ 1497  cd ../WSL2-Linux-Kernel
+ 1498  make KERNELRELEASE=$KERNELRELEASE -j 12
+ 1499  sudo apt install dwarves -y
+ 1500  make KERNELRELEASE=$KERNELRELEASE -j 12
+ 1501  echo ?
+ 1502  echo $?
+ 1503  make KERNELRELEASE=$KERNELRELEASE modules -j 12
+ 1504  sudo make KERNELRELEASE=$KERNELRELEASE modules_install
+ 1505  sudo mount -t debugfs debugfs /sys/kernel/debug
+ 1506* make all
+ 1507  vim .config
+ 1508  cd cd WSL2-Linux-Kernel/tools/
+ 1509  cd WSL2-Linux-Kernel/tools/perf
+ 1510  cd WSL2-Linux-Kernel/tools/
+ 1511  cd tools/
+ 1512  ls
+ 1513  cd bpf/
+ 1514  ls
+ 1515  make -j8
+ 1516  sudo apt install clang-11 clang-tools-11
+ 1517  sudo apt install clang-15 clang-tools-15
+ 1518  clang
+ 1519  clang-15
+ 1520  sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-15 200
+ 1521  clang
+ 1522  make -C tools/ prefix=/usr/
+ 1523  cd ../../
+ 1524  make -C tools/ prefix=/usr/
+ 1525  make -C tools/ bpf_install prefix=/usr/
+ 1526  apt-file find bfd.h
+ 1527  sudo apt install binutils-dev
+ 1528  make -C tools/ bpf_install prefix=/usr/
+ 1529  apt-file find readline/readline.h
+ 1530  sudo apt install libreadline-dev
+ 1531  make -C tools/ bpf_install prefix=/usr/
+ 1532  sudo make -C tools/ bpf_install prefix=/usr/
+ 1537* ./bin/ecapture gotls ./tests/golang_https

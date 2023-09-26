@@ -79,7 +79,12 @@
 (package! color-rg
   :recipe (:host github
            :repo "manateelazycat/color-rg"))
-(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
+(package! thing-edit
+  :recipe (:host github
+
+(package! codeium
+  :recipe (:host github
+           :repo "Exafunction/codeium.el"))
 
 (when (featurep! :term eshell)
   (package! esh-autosuggest)
