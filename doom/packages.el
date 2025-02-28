@@ -96,5 +96,6 @@
 
 ;; (package! symbol-overlay :recipe (:host github :repo "wolray/symbol-overlay"))
 
-(package! origami)
-(package! lsp-origami)
+;; (package! origami)
+;; (package! lsp-origami)
+;; (package! multiple-cursors)

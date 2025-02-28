@@ -40,7 +40,7 @@
      "e8df30cd7fb42e56a4efc585540a2e63b0c6eeb9f4dc053373e05d774332fc13"
      "333958c446e920f5c350c4b4016908c130c3b46d590af91e1e7e2a0611f1e8c5" default))
  '(package-selected-packages
-   '(evil-textobj-tree-sitter kubernetes origami plantuml-mode
+   '(evil-textobj-tree-sitter kubernetes multiple-cursors origami plantuml-mode
      treemacs-all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

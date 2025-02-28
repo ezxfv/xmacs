@@ -204,7 +204,8 @@
 
        :x
        english
-       copilot
+       codeium
+       ;;copilot
        ;;lsp-bridge
        ;;tabnine
        ;;eaf

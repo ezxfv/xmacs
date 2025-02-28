@@ -7,7 +7,7 @@
     (progn
       (add-to-list 'initial-frame-alist '(fullscreen . maximized))
       (plist-put +popup-defaults :modeline t)
-      (setq fancy-splash-image "~/.doom.d/banner/hack.png")
+      ;; (setq fancy-splash-image "~/.doom.d/banner/hack.png")
       (setq doom-theme 'tsdh-light)
       (setq doom-themes-treemacs-theme "doom-colors")
       (setq pixel-scroll-precision-mode t)
@@ -29,11 +29,11 @@
             (add-hook 'after-init-hook (lambda ()
                                          (text-scale-set 2))))
         (progn
-          (setq doom-font (font-spec :family "JetBrains Mono" :size 22 :height 1.8)
-                doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 22 :height 1.8)
-                doom-big-font (font-spec :family "JetBrains Mono" :size 22 :height 1.8))	;; are the three important ones:
+          (setq doom-font (font-spec :family "JetBrains Mono" :size 16 :height 1.2)
+                doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 16 :height 1.2)
+                doom-big-font (font-spec :family "JetBrains Mono" :size 18 :height 1.2))	;; are the three important ones:
           (add-hook 'after-init-hook (lambda ()
-                                       (text-scale-set 2)))))
+                                       (text-scale-set 1.5)))))
       ;; (after! evil
       ;;   (custom-set-faces '(cursor ((t (:background "#009999" :foreground "#222222")))))
       ;;   (setq evil-normal-state-cursor '(box "dark red")
@@ -51,7 +51,7 @@
       ;;   (global-hide-mode-line-mode 1))
       )
   ;; terminal mode
-  (setq doom-theme 'tango)
+  (setq doom-theme 'tsdh-dark)
   )
 
 ;; (after! dap-mode
