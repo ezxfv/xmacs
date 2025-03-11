@@ -1,7 +1,7 @@
 ;; ~/.doom.d/packages/codeium/config.el
 
 ;; we recommend using use-package to organize your init.el
-(use-package codeium
+(use-package! codeium
   ;; if you use straight
   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
   ;; otherwise, make sure that the codeium.el file is on load-path
@@ -61,3 +61,7 @@
      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
   (setq codeium/document/text 'my-codeium/document/text)
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+
+
+(use-package! codeium-overlay
+  :hook (prog-mode . codeium-overlay-mode))

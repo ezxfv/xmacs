@@ -46,11 +46,8 @@
 
 
 (when (modulep! :checkers spell)
-  (setq ispell-hunspell-dict-paths-alist
-        `(("english" ,(concat doom-user-dir "vendor/words/dict-en-20221101_lo/en_US.aff"))))
-  (setq ispell-local-dictionary "english")
-  (setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-  )
+  (setq ispell-program-name "aspell")
+  (setq ispell-dictionary "en_US")) ; 选择默认字典，例如 en_US
 
 (when (modulep! :term eshell)
   (use-package! esh-autosuggest
