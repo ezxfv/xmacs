@@ -23,16 +23,10 @@
 ;; + `doom-font'
 ;; + `doom-variable-pitch-font'
 ;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.  ;; ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd ;; font string. You generally only need these two:
-;;   intsll: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)'
+;;   presentations or streaming.
+;;   install: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)'
 (setq doom-font (font-spec :family "JetBrains Mono" :size 14 :height 1.2)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 12 :height 1.2))
-;; (setq doom-font (font-spec :family "Fira Code Retina" :size 14 :height 1.2)
-;;       doom-variable-pitch-font (font-spec :family "Fira Code Retina" :size 12 :height 1.2))
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -44,25 +38,55 @@
 
 (after! lsp-mode
   (delete 'lsp-terraform lsp-client-packages))
-;; Here are some additional functions/macros that could help you configure Doom:
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
-;; ref: https://www.cheng92.com/emacs/doom-emacs-with-org/
-(load! "+func")
-(load! "+ui")
-(load! "+misc")
-(load! "keybindings/+keybindings")
-(load! "lang/+config")
+
+;; General configuration
+(setq-default history-length 999)
+(setq-default prescient-history-length 1000)
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Allow Emacs to access content from clipboard.
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t)
+
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq mouse-wheel-progressive-speed 't)
+(setq mouse-wheel-follow-mouse 't)
+(setq scroll-step 2)
+
+(after! text-mode
+  (add-hook! 'text-mode-hook
+             ;; apply ANSI color codes
+             (with-silent-modifications
+               (ansi-color-apply-on-region (point-min) (point-max)))))
+
+;; Custom module config
+(when (modulep! :completion company)
+  (after! company
+    (setq company-idle-delay 0
+          company-minimum-prefix-length 2
+          company-show-quick-access t
+          company-insertion-triggers t
+          company-dabbrev-downcase nil
+          company-selection-wrap-around t)))
+
+(when (modulep! :checkers spell)
+  (setq ispell-program-name "aspell")
+  (setq ispell-dictionary "en_US"))
+
+(when (modulep! :term eshell)
+  (use-package! esh-autosuggest
+    :config
+    (add-hook 'eshell-mode-hook #'esh-autosuggest-mode -100)))
+
+(when (modulep! :x doom-meow)
+  (setq meow-use-clipboard t)
+  (setq doom-localleader-alt-key "C-l")
+  (map! :map meow-leader-keymap
+        "l" #'meow-keypad-start))
+
+(after! evil
+  (define-key evil-insert-state-map (kbd "C-y") 'yank)
+  (setq evil-fold-list nil)) ;; 禁用 Doom 的默认折叠机制
+
+;; 加载键盘绑定配置
+(load! "keybindings/keybindings")

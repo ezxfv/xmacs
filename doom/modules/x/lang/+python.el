@@ -1,3 +1,5 @@
+;;; modules/x/lang/+python.el -*- lexical-binding: t; -*-
+
 (when (modulep! :lang python +pylance)
   (require 'lsp)
 
@@ -5,8 +7,7 @@
   ;; install: code install --install-extension vscode-pylance-2020.10.2_vsixhub.com.vsix --force
   (setq pylancejs (concat (getenv "HOME") "/.vscode/extensions/ms-python.vscode-pylance-2020.10.2/dist/server.bundle.js"))
   (unless (file-exists-p pylancejs)
-    (setq pylancejs (concat (getenv "HOME") "/.vscode-server/extensions/ms-python.vscode-pylance-2020.10.2/dist/server.bundle.js"))
-    )
+    (setq pylancejs (concat (getenv "HOME") "/.vscode-server/extensions/ms-python.vscode-pylance-2020.10.2/dist/server.bundle.js")))
   (setq lsp-pyright-server-cmd (list "node" pylancejs "--stdio"))
 
   (lsp-register-client
@@ -25,9 +26,7 @@
                                           (lsp--set-configuration (lsp-configuration-section "python"))))
     :notification-handlers (lsp-ht ("pyright/beginProgress" 'ignore)
                                    ("pyright/reportProgress" 'ignore)
-                                   ("pyright/endProgress" 'ignore))))
-  )
-
+                                   ("pyright/endProgress" 'ignore)))))
 
 ;; These MODE-local-vars-hook hooks are a Doom thing. They're executed after
 ;; MODE-hook, on hack-local-variables-hook. Although `lsp!` is attached to
@@ -37,13 +36,11 @@
                                          (semantic-mode 1)
                                          (when (file-directory-p "~/.pyenv/versions/inf")
                                            (setq lsp-pyright-venv-path "~/.pyenv/versions/inf")
-                                           (pyenv-mode-set "inf")
-                                           )
+                                           (pyenv-mode-set "inf"))
                                          (when (getenv "CONDA_PREFIX_1")
                                            (setq conda-anaconda-home (getenv "CONDA_PREFIX_1"))
                                            (setq conda-env-autoactivate-mode 1)
-                                           (conda-env-activate "gitops")
-                                           )
+                                           (conda-env-activate "gitops"))
                                          (setq python-shell-interpreter "ipython"
                                                python-shell-interpreter-args "-i"
                                                doom-modeline-env-python-executable "python3"
@@ -60,4 +57,4 @@
                                             flycheck-python-pycompile-executable "python3")
                                            (flycheck-mode 1)
                                            (flycheck-add-next-checker 'python-pyright '(warning . python-pylint))
-                                           (flycheck-select-checker 'python-pyright))))
+                                           (flycheck-select-checker 'python-pyright)))) 

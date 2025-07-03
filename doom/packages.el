@@ -3,99 +3,50 @@
 
 ;; To install a package with Doom you must declare them here and run 'doom sync'
 ;; on the command line, then restart Emacs for the changes to take effect -- or
-;; use 'M-x doom/reload'.  ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
-                                        ;(package! some-package)
+;; use 'M-x doom/reload'.
+
+;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+;(package! some-package)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
 ;; https://github.com/raxod502/straight.el#the-recipe-format
-                                        ;(package! another-package
-                                        ;  :recipe (:host github :repo "username/repo"))
+;(package! another-package
+;  :recipe (:host github :repo "username/repo"))
 
 ;; If the package you are trying to install does not contain a PACKAGENAME.el
 ;; file, or is located in a subdirectory of the repo, you'll need to specify
 ;; `:files' in the `:recipe':
-                                        ;(package! this-package
-                                        ;  :recipe (:host github :repo "username/repo"
-                                        ;           :files ("some-file.el" "src/lisp/*.el")))
+;(package! this-package
+;  :recipe (:host github :repo "username/repo"
+;           :files ("some-file.el" "src/lisp/*.el")))
 
 ;; If you'd like to disable a package included with Doom, you can do so here
 ;; with the `:disable' property:
-                                        ;(package! builtin-package :disable t)
+;(package! builtin-package :disable t)
 
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
 ;; from Doom or MELPA/ELPA/Emacsmirror:
-                                        ;(package! builtin-package :recipe (:nonrecursive t))
-                                        ;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+;(package! builtin-package :recipe (:nonrecursive t))
+;(package! builtin-package-2 :recipe (:repo "myfork/package"))
 
 ;; Specify a `:branch' to install a package from a particular branch or tag.
 ;; This is required for some packages whose default branch isn't 'master' (which
 ;; our package manager can't deal with; see raxod502/straight.el#279)
-                                        ;(package! builtin-package :recipe (:branch "develop"))
+;(package! builtin-package :recipe (:branch "develop"))
 
 ;; Use `:pin' to specify a particular commit to install.
-                                        ;(package! builtin-package :pin "1a2b3c4d5e")
-
+;(package! builtin-package :pin "1a2b3c4d5e")
 
 ;; Doom's packages are pinned to a specific commit and updated from release to
 ;; release. The `unpin!' macro allows you to unpin single packages...
-                                        ;(unpin! pinned-package)
+;(unpin! pinned-package)
 ;; ...or multiple packages
-                                        ;(unpin! pinned-package another-pinned-package)
+;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
-                                        ;(unpin! t)
-;; (package! flycheck-inline)
-(package! smart-hungry-delete)
-(package! move-text)
-;; (package! parrot)
-;;(package! youdao-dictionary)
-;; (package! link-hint)
-(package! visual-regexp)
-(package! visual-regexp-steriods
-  :recipe (:host github :repo "benma/visual-regexp-steroids.el"))
-(package! crux)
-(package! string-inflection)
-(package! pangu-spacing)
-(package! cnfonts)
-(package! valign)
-(package! gotest)
-(package! keyfreq)
-(package! doom-nano-modeline
-  :recipe (:host github
-           :repo "ronisbr/doom-nano-modeline"))
-(package! bookmark+
-  :recipe (:host github
-           :repo "emacsmirror/bookmark-plus"))
-(package! crosshairs
-  :recipe (:host github
-           :repo "emacsmirror/crosshairs"))
-(package! exec-path-from-shell
-  :recipe (:host github
-           :repo "purcell/exec-path-from-shell"))
-(package! thing-edit
-  :recipe (:host github
-           :repo "manateelazycat/thing-edit"))
-(package! color-rg
-  :recipe (:host github
-           :repo "manateelazycat/color-rg"))
-;; (package! codeium
-;;   :recipe (:host github
-;;            :repo "Exafunction/codeium.el"))
+;(unpin! t)
 
-(when (featurep! :lang org +roam2)
-  (unpin! org-roam)
-  (package! org-roam-ui)
-  (package! org-roam-bibtex)
-  )
-
-(when (modulep! :completion vertico)
-  (package! consult-projectile
-    :recipe (:host gitlab :repo "OlMon/consult-projectile" :branch "master"))
-  )
-
-;; (package! symbol-overlay :recipe (:host github :repo "wolray/symbol-overlay"))
-
-;; (package! origami)
-;; (package! lsp-origami)
-;; (package! multiple-cursors)
+;; 现在所有的包都已经分配到对应的模块中了
+;; 如果需要添加新的包，请考虑添加到相应的模块中
+;; 或者创建新的模块来组织包

@@ -1,4 +1,4 @@
-;;; lang/+go.el -*- lexical-binding: t; -*-
+;;; modules/x/lang/+go.el -*- lexical-binding: t; -*-
 ;; Go settings
 
 (defun lsp-go-install-save-hooks ()
@@ -12,7 +12,6 @@
   (add-hook 'before-save-hook #'eglot-format-buffer -90 t)
   (add-hook 'before-save-hook #'+eglot-organize-imports -80 t))
 
-
 (when (modulep! :lang go)
   (if (modulep! :tools lsp +eglot)
       (progn
@@ -25,5 +24,4 @@
       (setq go-test-verbose t)
       (setq flycheck-golangci-lint-config (concat doom-user-dir "vendor/golangci.yml"))
       (add-hook 'go-mode-hook 'lsp-deferred)
-      (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)))
-  )
+      (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)))) 

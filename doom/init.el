@@ -206,7 +206,11 @@
        english
        codeium
        ;;copilot
-       ;;lsp-bridge
-       ;;tabnine
-       ;;eaf
+       editor-tools
+       chinese
+       search-nav
+       knowledge
+       ui-theme
+       dev-utils
+       lang
        )
