@@ -34,8 +34,4 @@
  :desc "Comment or Uncomment Line" :nv ";" #'evilnc-comment-or-uncomment-lines
  )
 
-;; 文本替换和查询
-(map!
- "C-c r"       #'vr/replace
- "C-c q"       #'vr/query-replace
- ) 
+;; 注意：visual-regexp 的快捷键 (C-c r, C-c q) 已移至 editor-tools 模块中统一管理 

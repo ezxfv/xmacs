@@ -3,7 +3,7 @@
 (package! smart-hungry-delete)
 (package! move-text)
 (package! visual-regexp)
-(package! visual-regexp-steriods
+(package! visual-regexp-steroids
   :recipe (:host github :repo "benma/visual-regexp-steroids.el"))
 (package! crux)
 (package! string-inflection)

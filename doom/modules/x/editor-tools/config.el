@@ -16,7 +16,7 @@
   (map! :nv "C-c r" #'vr/replace
         :nv "C-c q" #'vr/query-replace))
 
-(use-package! visual-regexp-steriods
+(use-package! visual-regexp-steroids
   :after visual-regexp)
 
 (use-package! crux
