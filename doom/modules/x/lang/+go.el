@@ -26,18 +26,6 @@
       (add-hook 'go-mode-hook 'lsp-deferred)
       (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))))
 
-;; Go Playground - 快速测试 Go 代码片段
-(use-package! go-playground
-  :after go-mode
-  :config
-  (setq go-playground-basedir (expand-file-name "go-playground" temporary-file-directory))
-  (map! :localleader
-        :map go-mode-map
-        (:prefix ("p" . "playground")
-         :desc "Run playground" "r" #'go-playground-exec
-         :desc "Download snippet" "d" #'go-playground-download
-         :desc "Remove snippet" "k" #'go-playground-rm)))
-
 ;; Go Tag - 自动添加/移除 struct tag
 (use-package! go-tag
   :after go-mode
