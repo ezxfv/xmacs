@@ -25,8 +25,8 @@
 ;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
 ;;   presentations or streaming.
 ;;   install: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)'
-(setq doom-font (font-spec :family "JetBrains Mono" :size 14 :height 1.2)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 12 :height 1.2))
+(setq doom-font (font-spec :family "Maple Mono" :size 14 :height 1.2)
+      doom-variable-pitch-font (font-spec :family "Maple Mono" :size 12 :height 1.2))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -87,6 +87,33 @@
 (after! evil
   (define-key evil-insert-state-map (kbd "C-y") 'yank)
   (setq evil-fold-list nil)) ;; 禁用 Doom 的默认折叠机制
+
+;; UI 配置
+(if (display-graphic-p)
+    ;; gui mode
+    (progn
+      (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+      (plist-put +popup-defaults :modeline t)
+      ;; (setq fancy-splash-image "~/.doom.d/banner/hack.png")
+      (setq doom-theme 'tsdh-light)
+      (setq doom-themes-treemacs-theme "doom-colors")
+      
+      ;; WSL 环境特殊处理
+      (if (getenv "WSL_DISTRO_NAME")
+          (progn
+            (setq doom-font (font-spec :family "Maple Mono" :size 22 :height 1.8)
+                  doom-variable-pitch-font (font-spec :family "Maple Mono" :size 22 :height 1.8)
+                  doom-big-font (font-spec :family "Maple Mono" :size 22 :height 1.8))
+            (add-hook 'after-init-hook (lambda ()
+                                         (text-scale-set 2))))
+        (progn
+          (setq doom-font (font-spec :family "Maple Mono" :size 16 :height 1.2)
+                doom-variable-pitch-font (font-spec :family "Maple Mono" :size 16 :height 1.2)
+                doom-big-font (font-spec :family "Maple Mono" :size 18 :height 1.2))
+          (add-hook 'after-init-hook (lambda ()
+                                       (text-scale-set 1.5))))))
+  ;; terminal mode
+  (setq doom-theme 'tsdh-dark))
 
 ;; 加载键盘绑定配置
 (load! "keybindings/keybindings")

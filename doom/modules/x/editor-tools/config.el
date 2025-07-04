@@ -34,11 +34,7 @@
   :config
   (map! :leader "c ~" #'string-inflection-all-cycle))
 
-(use-package! thing-edit
-  :config
-  (map! :leader "x e" #'thing-copy-email
-        :leader "x u" #'thing-copy-url
-        :leader "x f" #'thing-copy-filename))
+(use-package! thing-edit)
 
 ;; 多点编辑
 (use-package! iedit
@@ -94,4 +90,4 @@
   (global-undo-tree-mode)
   (setq undo-tree-visualizer-timestamps t)
   (setq undo-tree-visualizer-diff t)
-  (map! "C-x u" #'undo-tree-visualize)) 
+  (map! "C-x u" #'undo-tree-visualize))

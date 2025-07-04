@@ -53,30 +53,3 @@
   ;; 快捷键绑定
   (map! :leader
         :desc "Toggle pixel scroll precision" "t u" #'pixel-scroll-precision-mode)))
-
-;; UI 配置从 +ui.el 移过来
-(if (display-graphic-p)
-    ;; gui mode
-    (progn
-      (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-      (plist-put +popup-defaults :modeline t)
-      ;; (setq fancy-splash-image "~/.doom.d/banner/hack.png")
-      (setq doom-theme 'tsdh-light)
-      (setq doom-themes-treemacs-theme "doom-colors")
-      
-      ;; WSL 环境特殊处理
-      (if (getenv "WSL_DISTRO_NAME")
-          (progn
-            (setq doom-font (font-spec :family "JetBrains Mono" :size 22 :height 1.8)
-                  doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 22 :height 1.8)
-                  doom-big-font (font-spec :family "JetBrains Mono" :size 22 :height 1.8))
-            (add-hook 'after-init-hook (lambda ()
-                                         (text-scale-set 2))))
-        (progn
-          (setq doom-font (font-spec :family "JetBrains Mono" :size 16 :height 1.2)
-                doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 16 :height 1.2)
-                doom-big-font (font-spec :family "JetBrains Mono" :size 18 :height 1.2))
-          (add-hook 'after-init-hook (lambda ()
-                                       (text-scale-set 1.5))))))
-  ;; terminal mode
-  (setq doom-theme 'tsdh-dark)) 
