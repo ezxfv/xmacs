@@ -214,4 +214,5 @@
        ui-theme
        dev-utils
        lang
+       aidermacs
        )
