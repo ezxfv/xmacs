@@ -163,10 +163,11 @@
         +pretty
         +roam2
         )                  ; organize your plain life in plain text
+       ;; 或者使用 Ruff Language Server（更快的检查和格式化）
+       (python +lsp +ruff +conda +tree-sitter)            ; beautiful is better than ugly
        ;;php               ; perl's insecure younger brother
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       ;; (python +lsp +pyright +conda +tree-sitter)            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
