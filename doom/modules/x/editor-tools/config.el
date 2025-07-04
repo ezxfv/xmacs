@@ -36,11 +36,9 @@
 
 (use-package! thing-edit
   :config
-  (map! :leader
-        (:prefix ("y" . "yank/copy")
-         :desc "Copy email" "e" #'thing-copy-email
-         :desc "Copy URL" "u" #'thing-copy-url
-         :desc "Copy filename" "f" #'thing-copy-filename)))
+  (map! :leader "x e" #'thing-copy-email
+        :leader "x u" #'thing-copy-url
+        :leader "x f" #'thing-copy-filename))
 
 ;; 多点编辑
 (use-package! iedit
