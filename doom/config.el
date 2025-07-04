@@ -27,6 +27,8 @@
 ;;   install: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)'
 (setq doom-font (font-spec :family "Maple Mono NF" :size 16)
       doom-variable-pitch-font (font-spec :family "Maple Mono NF" :size 14))
+;(setq doom-font (font-spec :family "Monaspace Neon" :size 14)
+;      doom-variable-pitch-font (font-spec :family "Monaspace Neon" :size 12))
 
 ;; 修复modeline图标显示
 (after! doom-modeline
