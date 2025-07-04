@@ -25,8 +25,50 @@
 ;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
 ;;   presentations or streaming.
 ;;   install: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)'
-(setq doom-font (font-spec :family "Maple Mono" :size 14 :height 1.2)
-      doom-variable-pitch-font (font-spec :family "Maple Mono" :size 12 :height 1.2))
+(setq doom-font (font-spec :family "MapleMono Nerd Font" :size 14)
+      doom-variable-pitch-font (font-spec :family "MapleMono Nerd Font" :size 12))
+
+;; 备用字体配置（如果MapleMono Nerd Font不可用）
+(unless (find-font doom-font)
+  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14)
+        doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 12)))
+
+(unless (find-font doom-font)
+  (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 14)
+        doom-variable-pitch-font (font-spec :family "FiraCode Nerd Font" :size 12)))
+
+;; 优化图标显示
+(setq-default line-spacing 0.3)  ;; 进一步增加行间距
+
+;; 字体渲染优化
+(when (display-graphic-p)
+  ;; 禁用可能导致图标显示问题的字体设置
+  (setq font-use-system-font nil)
+  ;; 确保字体渲染正确
+  (setq inhibit-compacting-font-caches t))
+
+(after! all-the-icons
+  (setq all-the-icons-scale-factor 0.8)  ;; 进一步缩小图标
+  ;; 确保图标字体正确加载
+  (when (display-graphic-p)
+    (all-the-icons-install-fonts t))
+  ;; 强制刷新图标缓存
+  (setq all-the-icons-color-icons t)
+  (setq all-the-icons-for-buffer t))
+
+;; 修复modeline图标显示
+(after! doom-modeline
+  (setq doom-modeline-height 28)  ;; 进一步增加modeline高度
+  (setq doom-modeline-bar-width 4)
+  (setq doom-modeline-icon t)
+  (setq doom-modeline-major-mode-icon t)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-buffer-file-name-style 'truncate-with-project))
+
+;; 确保treemacs图标正确显示
+(after! treemacs
+  (setq treemacs-no-png-images nil)
+  (setq treemacs-width 30))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -101,17 +143,31 @@
       ;; WSL 环境特殊处理
       (if (getenv "WSL_DISTRO_NAME")
           (progn
-            (setq doom-font (font-spec :family "Maple Mono" :size 22 :height 1.8)
-                  doom-variable-pitch-font (font-spec :family "Maple Mono" :size 22 :height 1.8)
-                  doom-big-font (font-spec :family "Maple Mono" :size 22 :height 1.8))
-            (add-hook 'after-init-hook (lambda ()
-                                         (text-scale-set 2))))
+            (setq doom-font (font-spec :family "MapleMono Nerd Font" :size 20)
+                  doom-variable-pitch-font (font-spec :family "MapleMono Nerd Font" :size 20)
+                  doom-big-font (font-spec :family "MapleMono Nerd Font" :size 22))
+            ;; WSL环境备用字体
+            (unless (find-font doom-font)
+              (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 20)
+                    doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 20)
+                    doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 22)))
+            (unless (find-font doom-font)
+              (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 20)
+                    doom-variable-pitch-font (font-spec :family "FiraCode Nerd Font" :size 20)
+                    doom-big-font (font-spec :family "FiraCode Nerd Font" :size 22))))
         (progn
-          (setq doom-font (font-spec :family "Maple Mono" :size 16 :height 1.2)
-                doom-variable-pitch-font (font-spec :family "Maple Mono" :size 16 :height 1.2)
-                doom-big-font (font-spec :family "Maple Mono" :size 18 :height 1.2))
-          (add-hook 'after-init-hook (lambda ()
-                                       (text-scale-set 1.5))))))
+          (setq doom-font (font-spec :family "MapleMono Nerd Font" :size 16)
+                doom-variable-pitch-font (font-spec :family "MapleMono Nerd Font" :size 16)
+                doom-big-font (font-spec :family "MapleMono Nerd Font" :size 18))
+          ;; 非WSL环境备用字体
+          (unless (find-font doom-font)
+            (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 16)
+                  doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 16)
+                  doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 18)))
+          (unless (find-font doom-font)
+            (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 16)
+                  doom-variable-pitch-font (font-spec :family "FiraCode Nerd Font" :size 16)
+                  doom-big-font (font-spec :family "FiraCode Nerd Font" :size 18))))))
   ;; terminal mode
   (setq doom-theme 'tsdh-dark))
 
