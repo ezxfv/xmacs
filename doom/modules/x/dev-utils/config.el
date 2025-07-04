@@ -7,13 +7,8 @@
   :after go-mode
   :config
   (setq go-test-verbose t)
-  (map! :localleader
-        :map go-mode-map
-        (:prefix ("t" . "test")
-         :desc "Test function" "f" #'go-test-current-test
-         :desc "Test file" "t" #'go-test-current-file
-         :desc "Test project" "p" #'go-test-current-project
-         :desc "Test coverage" "c" #'go-test-current-coverage)))
+  ;; 键位绑定已迁移到 keybindings/development.el
+  )
 
 (use-package! keyfreq
   :config
@@ -37,12 +32,8 @@
   :config
   (setq kubernetes-poll-frequency 3600
         kubernetes-redraw-frequency 3600)
-  (map! :leader
-        (:prefix ("k" . "kubernetes")
-         :desc "Overview" "o" #'kubernetes-overview
-         :desc "Display pod" "p" #'kubernetes-display-pod
-         :desc "Display config" "c" #'kubernetes-display-config-map
-         :desc "Display secret" "s" #'kubernetes-display-secret)))
+  ;; 键位绑定已迁移到 keybindings/development.el
+  )
 
 ;; K8s YAML 增强
 (use-package! k8s-mode
@@ -57,4 +48,4 @@
   (add-hook 'yaml-mode-hook
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent)
-              (setq yaml-indent-offset 2)))) 
+              (setq yaml-indent-offset 2))))

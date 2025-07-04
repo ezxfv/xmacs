@@ -33,10 +33,8 @@
   :config
   (setq bmkp-last-as-first-bookmark-file "/home/edenz/.config/doom/bookmarks"
         bmkp-bookmark-file "/home/edenz/.config/doom/bookmarks")
-  (map! :leader
-        :desc "Open bookmarks menu" "m b" #'bmkp-bmenu-list-bookmarks
-        :desc "Set bookmark" "m m" #'bmkp-set-bookmark
-        :desc "Jump to bookmark" "m j" #'bmkp-jump-to-list))
+  ;; 键位绑定已迁移到 keybindings/applications.el
+  )
 
 (when (modulep! :lang org)
   (use-package! org-download
@@ -121,4 +119,4 @@
 
   ;; Additionally, reftex code to recognize this environment as an equation
   (setq reftex-label-alist
-        '(("dmath" ?e nil nil t)))) 
+        '(("dmath" ?e nil nil t))))

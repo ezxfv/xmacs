@@ -12,8 +12,8 @@
 
 (use-package! crosshairs
   :config
-  (map! :leader
-        :desc "Toggle crosshairs" "t c" #'crosshairs-mode))
+  ;; 键位绑定已迁移到 keybindings/applications.el
+  )
 
 ;; 平台特定的滚动配置
 (cond
@@ -30,9 +30,8 @@
     (setq scroll-conservatively 3 ; or whatever value you prefer, since v0.4
           scroll-margin 0)        ; important: scroll-margin>0 not yet supported
     
-    ;; 快捷键绑定
-    (map! :leader
-          :desc "Check ultra-scroll compatibility" "t u" #'ultra-scroll-check)))
+    ;; 快捷键绑定已迁移到 keybindings/applications.el
+    ))
  
  ;; 其他平台使用系统级像素滚动
  (t

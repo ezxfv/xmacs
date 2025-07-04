@@ -54,8 +54,7 @@
 
 ;; TreeMacs 配置
 (when (modulep! :ui treemacs)
-  (global-set-key (kbd "C-c C-o") (lambda () (interactive) (lsp-treemacs-call-hierarchy t)))
-  (global-set-key (kbd "C-c C-i") (lambda () (interactive) (lsp-treemacs-call-hierarchy nil)))
+  ;; 键位绑定已迁移到 keybindings/development.el
   ;; treemacs ignore files
   (setq treemacs-file-ignore-extensions
         '(;; LaTeX
@@ -85,4 +84,4 @@
           ;; AucTeX
           "*/.auctex-auto"
           "*/_region_.log"
-          "*/_region_.tex"))) 
+          "*/_region_.tex")))

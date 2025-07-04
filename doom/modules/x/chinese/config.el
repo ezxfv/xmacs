@@ -6,8 +6,8 @@
 
 (use-package! cnfonts
   :config
-  (map! :niv "C--" #'cnfonts-decrease-fontsize
-        :niv "C-+" #'cnfonts-increase-fontsize))
+  ;; 键位绑定已迁移到 keybindings/applications.el
+  )
 
 (use-package! valign
   :after org
@@ -26,4 +26,4 @@
                        (:name sogou :file ,(concat doom-user-dir "vendor/pyim/sogou.pyim")))
           pyim-default-scheme 'quanpin
           pyim-english-input-switch-functions '(pyim-probe-isearch-mode)
-          pyim-page-length 6))) 
+          pyim-page-length 6)))
