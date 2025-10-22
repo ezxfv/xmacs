@@ -25,8 +25,8 @@
 ;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
 ;;   presentations or streaming.
 ;;   install: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)'
-(setq doom-font (font-spec :family "Maple Mono NF" :size 16)
-      doom-variable-pitch-font (font-spec :family "Maple Mono NF" :size 14))
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 16)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14))
 ;(setq doom-font (font-spec :family "Monaspace Neon" :size 14)
 ;      doom-variable-pitch-font (font-spec :family "Monaspace Neon" :size 12))
 
@@ -116,6 +116,19 @@
 
   ;; terminal mode
   (setq doom-theme 'tsdh-dark))
+
+(after! gcmh
+  (setq gcmh-idle-delay 5
+        gcmh-high-cons-threshold (* 32 1024 1024 1024)  ;; 32GB
+        gcmh-low-cons-threshold  (* 2 1024 1024 1024)   ;; 2GB
+        gc-cons-percentage 0.6))
+
+;; 失焦/空闲时收一收，减少回到 Emacs 的首卡
+(add-hook 'focus-out-hook #'garbage-collect)
+
+;; 迷你缓冲区输入时尽量不 GC（可选）
+(add-hook 'minibuffer-setup-hook (lambda () (setq gc-cons-threshold most-positive-fixnum)))
+(add-hook 'minibuffer-exit-hook  (lambda () (setq gc-cons-threshold gcmh-high-cons-threshold)))
 
 ;; 加载键盘绑定配置
 (load! "keybindings/keybindings")

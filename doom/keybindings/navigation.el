@@ -26,6 +26,10 @@
  :desc "Search in project"      :n "sp" #'counsel-projectile-rg
  )
 
+(map! :n "C-s" #'+default/search-buffer
+      :i "C-s" #'+default/search-buffer
+      :v "C-s" #'+default/search-buffer)
+
 ;; 搜索和导航增强功能
 (when (modulep! :x search-nav)
   ;; Color RG 搜索

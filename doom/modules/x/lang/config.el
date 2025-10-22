@@ -27,18 +27,6 @@
      '(("gopls.completeUnimported" t t)
        ("gopls.staticcheck" t t)))))
 
-;; TreeSitter 配置
-(when (modulep! :tools tree-sitter)
-  (use-package! tree-sitter
-    :hook (prog-mode . turn-on-tree-sitter-mode)
-    :hook (tree-sitter-after-on . tree-sitter-hl-mode)
-    :config
-    (require 'tree-sitter-langs)
-    ;; This makes every node a link to a section of code
-    (setq tree-sitter-debug-jump-buttons t
-          ;; and this highlights the entire sub tree in your code
-          tree-sitter-debug-highlight-jump-region t)))
-
 ;; DAP 调试配置
 (use-package! dap-mode
   :config
