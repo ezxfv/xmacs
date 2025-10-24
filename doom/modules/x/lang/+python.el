@@ -18,36 +18,6 @@
                                           :lint (list :enable t)
                                           :format (list :enable t)))))))
 
-;; Pylance Language Server 配置（当不使用 +ruff 时）
-(when (and (modulep! :lang python +pylance)
-           (not (modulep! :lang python +ruff)))
-  (require 'lsp)
-
-  ;; download vsix from `https://www.vsixhub.com/vsix/41816/'
-  ;; install: code install --install-extension vscode-pylance-2020.10.2_vsixhub.com.vsix --force
-  (setq pylancejs (concat (getenv "HOME") "/.vscode/extensions/ms-python.vscode-pylance-2020.10.2/dist/server.bundle.js"))
-  (unless (file-exists-p pylancejs)
-    (setq pylancejs (concat (getenv "HOME") "/.vscode-server/extensions/ms-python.vscode-pylance-2020.10.2/dist/server.bundle.js")))
-  (setq lsp-pyright-server-cmd (list "node" pylancejs "--stdio"))
-
-  (lsp-register-client
-   (make-lsp-client
-    :new-connection (lsp-stdio-connection
-                     (lambda () lsp-pyright-server-cmd)
-                     (lambda ()
-                       (and (cl-second lsp-pyright-server-cmd)
-                            (file-exists-p (cl-second lsp-pyright-server-cmd)))))
-    :major-modes '(python-mode)
-    :server-id 'pyright
-    :priority 11
-    :multi-root t
-    :initialized-fn (lambda (workspace)
-                      (with-lsp-workspace workspace
-                                          (lsp--set-configuration (lsp-configuration-section "python"))))
-    :notification-handlers (lsp-ht ("pyright/beginProgress" 'ignore)
-                                   ("pyright/reportProgress" 'ignore)
-                                   ("pyright/endProgress" 'ignore)))))
-
 ;; Ruff Flycheck Checker 定义（仅在不使用 ruff LSP 时使用）
 (when (and (modulep! :tools syntax)
            (not (modulep! :lang python +ruff)))
@@ -128,10 +98,10 @@
       (:prefix ("f" . "format")
        :desc "Ruff format" "f" (if (modulep! :lang python +ruff)
                                    #'lsp-format-buffer
-                                   #'python-ruff-format-buffer)
+                                 #'python-ruff-format-buffer)
        :desc "Ruff check" "c" (if (modulep! :lang python +ruff)
                                   #'lsp-workspace-restart
-                                  #'python-ruff-check-buffer)))
+                                #'python-ruff-check-buffer)))
 
 ;; Pytest 测试框架
 (use-package! pytest

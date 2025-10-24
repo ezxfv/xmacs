@@ -8,3 +8,6 @@
   :recipe (:host github :repo "brantou/emacs-go-tag"))
 (package! go-fill-struct
   :recipe (:host github :repo "s-kostyaev/go-fill-struct"))
+
+
+(package! pytest)
