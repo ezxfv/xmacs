@@ -28,18 +28,9 @@
       (setq doom-theme 'tsdh-light))
   (setq doom-theme 'tsdh-dark))
 
-;; ─── 3. Performance & GC ─────────────────────────────────────
+;; ─── 3. Evil Base Config ─────────────────────────────────────
 (setq native-comp-async-report-warnings-errors nil)
 
-(after! gcmh
-  (setq gcmh-idle-delay 5
-        gcmh-high-cons-threshold (* 32 1024 1024)   ;; 32 MB
-        gcmh-low-cons-threshold  (* 2 1024 1024)    ;; 2 MB
-        gc-cons-percentage 0.1))
-
-(add-hook 'focus-out-hook #'garbage-collect)
-
-;; ─── 4. Evil Base Config ─────────────────────────────────────
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
@@ -48,7 +39,7 @@
 
 (setq evil-snipe-override-evil-repeat-keys nil)
 
-;; ─── 5. Completion ────────────────────────────────────────────
+;; ─── 4. Completion ────────────────────────────────────────────
 (use-package completion-preview
   :ensure nil
   :hook (prog-mode . completion-preview-mode)
@@ -64,7 +55,7 @@
           company-show-quick-access t
           company-selection-wrap-around t)))
 
-;; ─── 6. LSP + lsp-booster ─────────────────────────────────────
+;; ─── 5. LSP + lsp-booster ─────────────────────────────────────
 (after! lsp-mode
   (setq lsp-idle-delay 0.10
         lsp-auto-configure t
@@ -125,28 +116,13 @@
   :config
   (require 'dap-dlv-go))
 
-;; ─── 7. Go Config ─────────────────────────────────────────────
+;; ─── 6. Go Config ─────────────────────────────────────────────
 (after! go-mode
   (add-hook 'before-save-hook #'lsp-format-buffer -100 t)
   (add-hook 'before-save-hook #'lsp-organize-imports -99 t)
-
-  (setq go-test-verbose t
-        flycheck-golangci-lint-fast t)
-
   (add-hook 'go-mode-hook #'lsp-deferred))
 
-(use-package! gotest
-  :after go-mode
-  :config (setq go-test-verbose t))
-
-(use-package! go-tag
-  :after go-mode
-  :config (setq go-tag-args '("-transform" "camelcase")))
-
-(use-package! go-fill-struct
-  :after go-mode)
-
-;; ─── 8. Python Config ─────────────────────────────────────────
+;; ─── 7. Python Config ─────────────────────────────────────────
 (after! python-mode
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i"
@@ -164,10 +140,7 @@
               (when (modulep! :tools lsp)
                 (lsp-deferred)))))
 
-(use-package! pytest
-  :after python)
-
-;; ─── 9. TypeScript / JavaScript ───────────────────────────────
+;; ─── 8. TypeScript / JavaScript ───────────────────────────────
 (after! typescript-mode
   (add-hook 'typescript-mode-hook #'lsp-deferred))
 
@@ -176,7 +149,7 @@
     (when (string-match-p "\\.tsx\\'" (or (buffer-file-name) ""))
       (lsp-deferred))))
 
-;; ─── 10. Docker / Kubernetes / Helm ───────────────────────────
+;; ─── 9. Docker / Kubernetes / Helm ───────────────────────────
 (after! dockerfile-mode
   (add-hook 'dockerfile-mode-hook #'lsp-deferred))
 
@@ -196,11 +169,10 @@
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . go-mode))
 (add-to-list 'auto-mode-alist '("\\.gotmpl\\'" . go-mode))
 
-;; ─── 11. AI / agent-shell ─────────────────────────────────────
+;; ─── 10. AI: Agent Shell ─────────────────────────────────────
 (use-package! agent-shell
   :commands (agent-shell agent-shell-anthropic-start-claude-code)
   :init
-  ;; Anthropic API key from environment variable
   (when (getenv "ANTHROPIC_API_KEY")
     (setq agent-shell-anthropic-authentication
           (agent-shell-anthropic-make-authentication
@@ -209,10 +181,44 @@
           (agent-shell-anthropic-make-claude-code-config))
     (setq agent-shell-anthropic-claude-environment
           (agent-shell-make-environment-variables
-           "ANTHROPIC_API_KEY"
-           (getenv "ANTHROPIC_API_KEY")))))
+           "ANTHROPIC_API_KEY" (getenv "ANTHROPIC_API_KEY")))))
 
-;; ─── 12. Org-mode ─────────────────────────────────────────────
+;; ─── 11. AI: gptel ──────────────────────────────────────────
+(use-package! gptel
+  :commands (gptel gptel-send gptel-menu gptel-abort)
+  :config
+  (setq gptel-model 'claude-sonnet-4-20250514
+        gptel-backend (gptel-make-anthropic "Claude"
+                        :stream t
+                        :key (getenv "ANTHROPIC_API_KEY")))
+  (setq gptel-default-mode 'org-mode))
+
+;; ─── 12. AI: ai-code-interface ───────────────────────────────
+(use-package! ai-code-interface
+  :commands (ai-code-menu)
+  :config
+  (setq ai-code-interface-default-backend "claude-code"
+        ai-code-interface-terminal-type 'vterm))
+
+;; ─── 13. AI: Claude Code IDE ─────────────────────────────────
+(use-package! claude-code-ide
+  :commands (claude-code-ide-start
+             claude-code-ide-send-region
+             claude-code-ide-send-buffer
+             claude-code-ide-send-error-context)
+  :config
+  (setq claude-code-ide-terminal-type 'vterm))
+
+;; ─── 14. AI: minuet-ai (inline completions) ─────────────────
+(use-package! minuet-ai
+  :hook (prog-mode . minuet-ai-mode)
+  :config
+  (setq minuet-provider 'claude
+        minuet-api-key (getenv "ANTHROPIC_API_KEY"))
+  (setq minuet-n-completions 3
+        minuet-context-window 512))
+
+;; ─── 15. Org-mode ────────────────────────────────────────────
 (setq org-directory "~/org/")
 
 (after! org
@@ -248,16 +254,7 @@
                 org-image-actual-width 300
                 org-download-screenshot-file "/tmp/screenshot.png"))
 
-;; ─── 13. Chinese Support ──────────────────────────────────────
-(use-package! pangu-spacing
-  :config
-  (global-pangu-spacing-mode 1))
-
-(use-package! cnfonts
-  :config
-  ;; Font size adjustment via cnfonts UI only; no global C--/C-+ binding
-  )
-
+;; ─── 16. Chinese Input ───────────────────────────────────────
 (when (modulep! :input chinese)
   (after! pyim
     (if (display-graphic-p)
@@ -269,16 +266,7 @@
           pyim-english-input-switch-functions '(pyim-probe-isearch-mode)
           pyim-page-length 6)))
 
-;; ─── 14. Editing Tools ────────────────────────────────────────
-(use-package! smart-hungry-delete
-  :bind (([remap backward-delete-char-untabify] . smart-hungry-delete-backward-char)
-         ([remap delete-backward-char] . smart-hungry-delete-backward-char)
-         ([remap delete-char] . smart-hungry-delete-forward-char))
-  :init (smart-hungry-delete-add-default-hooks))
-
-(use-package! visual-regexp-steroids
-  :after visual-regexp)
-
+;; ─── 17. Editing Tools ───────────────────────────────────────
 (use-package! avy
   :config
   (setq avy-timeout-seconds 0.5))
@@ -288,28 +276,21 @@
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package! expand-region)
-
 (use-package! embrace)
-
 (use-package! iedit)
-
 (use-package! move-text)
-
 (use-package! crux)
 
-;; ─── 15. Platform-Specific ────────────────────────────────────
+;; ─── 18. Platform-Specific ───────────────────────────────────
 (when IS-MAC
-  ;; Doom's :os macos handles command/option modifiers
   (setq mac-right-option-modifier 'none
         ns-right-option-modifier 'none)
 
-  ;; Sync env vars from shell
   (use-package! exec-path-from-shell
     :config
     (when (memq window-system '(mac ns x))
       (exec-path-from-shell-initialize)))
 
-  ;; Pixel-precise smooth scrolling
   (use-package! ultra-scroll
     :config
     (ultra-scroll-mode 1)
@@ -317,13 +298,12 @@
           scroll-margin 0)))
 
 (unless IS-MAC
-  ;; Linux: built-in pixel scroll
   (when (fboundp 'pixel-scroll-precision-mode)
     (pixel-scroll-precision-mode 1))
   (setq scroll-conservatively 101
         scroll-margin 0))
 
-;; ─── 16. Clipboard & Misc ─────────────────────────────────────
+;; ─── 19. Clipboard & Misc ────────────────────────────────────
 (setq x-select-enable-clipboard t
       x-select-enable-primary t)
 
@@ -332,5 +312,5 @@
       mouse-wheel-follow-mouse t
       scroll-step 2)
 
-;; ─── 17. Load Keybindings ─────────────────────────────────────
+;; ─── 20. Load Keybindings ────────────────────────────────────
 (load! "keybindings")

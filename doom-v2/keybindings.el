@@ -1,108 +1,130 @@
 ;;; keybindings.el -*- lexical-binding: t; -*-
 ;;
+;; Designed with Huffman coding principle:
+;;   Tier 1 (per-minute):  M-key or SPC+1key  (cost ≤ 2)
+;;   Tier 2 (per-hour):    SPC+2keys          (cost = 3)
+;;   Tier 3 (per-session): SPC+2keys or M-key (cost = 3)
+;;   Tier 4 (occasional):  SPC+2keys          (cost = 3-4)
+;;
+;; All bindings are terminal-safe (no C-; C-' C-: C-= C-> C-< C-S-*)
+;;
 ;;   IRON RULE: Never rebind these evil core keys:
 ;;     f  F  t  T  (evil-find-char)
 ;;     ;  ,        (evil-repeat-find-char)
 ;;     /  ?  n  N  (evil-search)
 ;;     *  #        (evil-search-word)
 ;;     m           (evil-mark)
-;;
-;;   Conflicts resolved from old config:
-;;     C-c d  → single binding (was double-bound)
-;;     C--    → removed (was double-bound)
-;;     C-+    → removed (was double-bound)
-;;     ff     → removed (was overriding evil-find-char)
-;;     sp     → removed (was double-bound)
 
-;; ─── Global / System ──────────────────────────────────────────
-(global-set-key (kbd "<f12>") #'smerge-vc-next-conflict)
-(global-set-key (kbd "C-\\") #'toggle-input-method)
-(global-set-key (kbd "<f9>") #'sdcv-search-pointer+)
+;; ═══ Tier 1: Extreme Frequency (cost ≤ 2) ═══════════════════
 
-;; ─── Multi-Cursor ─────────────────────────────────────────────
-(map!
- "C->"     #'mc/mark-next-like-this
- "C-<"     #'mc/mark-previous-like-this
- "C-c C-<" #'mc/mark-all-like-this)
+;; M-RET → send to AI (THE most frequent action in AI-native workflow)
+(map! :nvi "M-RET" #'gptel-send)
 
-;; ─── Editing ──────────────────────────────────────────────────
-(map!
- [remap move-beginning-of-line] #'crux-move-beginning-of-line
- [remap kill-line]              #'crux-smart-kill-line
-
- "C-c d"  #'crux-duplicate-current-line-or-region
- "C-c n"  #'crux-cleanup-buffer-or-region
- "C-c f"  #'crux-recentf-find-file
-
- "C-="   #'er/expand-region
- "C-:"   #'avy-goto-char
- "C-'"   #'avy-goto-char-2
- "M-g f" #'avy-goto-line
- "M-g w" #'avy-goto-word-1
-
- "C-;"   #'iedit-mode
- "C-,"   #'embrace-commander
- "M-o"   #'ace-window
-
- :nv "C-S-j" #'move-text-down
- :nv "C-S-k" #'move-text-up
-
- :nv "C-c r" #'vr/replace
- :nv "C-c q" #'vr/query-replace)
-
-;; ─── Windows ──────────────────────────────────────────────────
+;; SPC j → jump to any visible position (j = jump)
 (map! :leader
-      "0" #'treemacs-select-window
-      "1" #'winum-select-window-1
-      "2" #'winum-select-window-2
-      "3" #'winum-select-window-3
-      "4" #'winum-select-window-4
-      "8" #'split-window-below
-      "9" #'split-window-right)
+      :desc "Jump char"   "j" #'avy-goto-char-2
+      :desc "Jump line"   "J" #'avy-goto-line)
 
-;; ─── Development ──────────────────────────────────────────────
+;; M-o → switch window (o = other, works in any mode)
+(map! :nvi "M-o" #'ace-window)
+
+;; SPC v → expand region (v = visual expand)
+(map! :leader
+      :desc "Expand region" "v" #'er/expand-region)
+
+;; SPC d → duplicate line/region (d = duplicate)
+(map! :leader
+      :desc "Duplicate" "d" #'crux-duplicate-current-line-or-region)
+
+;; ═══ Tier 2: High Frequency (cost = 3) ══════════════════════
+
+;; ─── SPC a = AI (a = AI, home row) ───────────────────────────
+(map! :leader
+      (:prefix ("a" . "AI")
+       :desc "AI code menu"         "a" #'ai-code-menu
+       :desc "Send to AI"           "s" #'gptel-send
+       :desc "Claude IDE start"     "c" #'claude-code-ide-start
+       :desc "gptel chat"           "g" #'gptel
+       :desc "Agent shell"          "S" #'agent-shell
+       :desc "Claude Code shell"    "C" #'agent-shell-anthropic-start-claude-code
+       :desc "Model/menu"           "m" #'gptel-menu
+       :desc "Send region"          "r" #'claude-code-ide-send-region
+       :desc "Send buffer"          "b" #'claude-code-ide-send-buffer
+       :desc "Send errors"          "e" #'claude-code-ide-send-error-context
+       :desc "Abort"                "x" #'gptel-abort
+       :desc "Toggle completions"   "t" #'minuet-ai-mode))
+
+;; ─── SPC c = code (diagnostics & formatting) ─────────────────
 (map! :leader
       (:prefix ("c" . "code")
        :desc "Format buffer"     "f" #'+format/buffer
        :desc "List errors"       "x" #'flycheck-list-errors
        :desc "Next error"        "n" #'flycheck-next-error
        :desc "Previous error"    "p" #'flycheck-previous-error
-       :desc "Select checker"    "s" #'flycheck-select-checker)
+       :desc "Select checker"    "s" #'flycheck-select-checker))
 
-      (:prefix ("e" . "AI")
-       :desc "agent-shell"       "s" #'agent-shell
-       :desc "Claude Code"       "c" #'agent-shell-anthropic-start-claude-code)
+;; ─── SPC e = edit (multi-edit operations) ─────────────────────
+(map! :leader
+      (:prefix ("e" . "edit")
+       :desc "iedit (edit all)"     "e" #'iedit-mode
+       :desc "Mark next"            "n" #'mc/mark-next-like-this
+       :desc "Mark previous"        "p" #'mc/mark-previous-like-this
+       :desc "Mark all"             "a" #'mc/mark-all-like-this
+       :desc "Surround"             "s" #'embrace-commander))
 
+;; ─── SPC k = kubernetes ───────────────────────────────────────
+(map! :leader
       (:prefix ("k" . "kubernetes")
        :desc "Overview"          "o" #'kubernetes-overview
        :desc "Display pod"       "p" #'kubernetes-display-pod
        :desc "Display config"    "c" #'kubernetes-display-config-map
-       :desc "Display secret"    "s" #'kubernetes-display-secret)
+       :desc "Display secret"    "s" #'kubernetes-display-secret))
 
-      :desc "M-x"                "SPC" #'execute-extended-command)
+;; ═══ Tier 3: Medium Frequency ════════════════════════════════
 
-;; ─── Go Mode ──────────────────────────────────────────────────
-(map! :localleader
-      :map go-mode-map
-      (:prefix ("r" . "refactor")
-       :desc "Add tags"          "a" #'go-tag-add
-       :desc "Remove tags"       "r" #'go-tag-remove
-       :desc "Fill struct"       "f" #'go-fill-struct)
-      (:prefix ("t" . "test")
-       :desc "Test function"     "f" #'go-test-current-test
-       :desc "Test file"         "t" #'go-test-current-file
-       :desc "Test project"      "p" #'go-test-current-project
-       :desc "Test coverage"     "c" #'go-test-current-coverage))
+;; ─── Window management ────────────────────────────────────────
+(map! :leader
+      "0" #'treemacs-select-window
+      "1" #'winum-select-window-1
+      "2" #'winum-select-window-2
+      "3" #'winum-select-window-3
+      "4" #'winum-select-window-4
+      (:prefix ("w" . "window")
+       :desc "Split horizontal" "s" #'split-window-below
+       :desc "Split vertical"   "v" #'split-window-right))
 
-;; ─── Python Mode ──────────────────────────────────────────────
-(map! :localleader
-      :map python-mode-map
-      (:prefix ("t" . "test")
-       :desc "All tests"         "a" #'pytest-all
-       :desc "Module"            "m" #'pytest-module
-       :desc "One test"          "o" #'pytest-one
-       :desc "Function"          "f" #'pytest-pdb-one
-       :desc "Last failed"       "l" #'pytest-last-failed))
+;; ─── Move text (M-j/k = down/up, any mode) ───────────────────
+(map! :nv "M-j" #'move-text-down
+      :nv "M-k" #'move-text-up)
+
+;; ─── Toggles ─────────────────────────────────────────────────
+(map! :leader
+      (:prefix ("t" . "toggle")
+       :desc "Zen mode"          "z" #'+zen/toggle-fullscreen
+       :desc "Input method"      "i" #'toggle-input-method))
+
+;; ─── M-x ─────────────────────────────────────────────────────
+(map! :leader
+      :desc "M-x" "SPC" #'execute-extended-command)
+
+;; ═══ Tier 4: Low Frequency ═══════════════════════════════════
+
+(global-set-key (kbd "<f12>") #'smerge-vc-next-conflict)
+
+;; ═══ Insert Mode: C-c fallbacks ══════════════════════════════
+
+(map!
+ "C-c a" #'ai-code-menu
+ "C-c d" #'crux-duplicate-current-line-or-region
+ "C-c n" #'crux-cleanup-buffer-or-region)
+
+;; ═══ Crux remaps (mode-agnostic, zero cost) ═════════════════
+
+(map!
+ [remap move-beginning-of-line] #'crux-move-beginning-of-line
+ [remap kill-line]              #'crux-smart-kill-line)
+
+;; ═══ Localleader: Language-Specific ══════════════════════════
 
 ;; ─── Org Mode ─────────────────────────────────────────────────
 (after! org
@@ -139,7 +161,3 @@
         :desc "Level 4"          "4"  #'markdown-insert-atx-4
         :desc "Level 5"          "5"  #'markdown-insert-atx-5
         :desc "Level 6"          "6"  #'markdown-insert-atx-6)))
-
-;; ─── Zen Mode ─────────────────────────────────────────────────
-(map! :leader
-      :desc "Zen mode"           "t z" #'+zen/toggle-fullscreen)

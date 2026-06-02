@@ -2,14 +2,17 @@
 
 ;; ─── AI ──────────────────────────────────────────────────────
 (package! agent-shell)
+(package! gptel)
+(package! ai-code-interface
+  :recipe (:host github :repo "tninja/ai-code-interface.el"))
+(package! claude-code-ide
+  :recipe (:host github :repo "manzaltu/claude-code-ide"))
+(package! minuet-ai
+  :recipe (:host github :repo "milanglacier/minuet-ai.el"))
 
 ;; ─── Editing Enhancements ─────────────────────────────────────
 (package! crux)
-(package! smart-hungry-delete)
 (package! move-text)
-(package! visual-regexp)
-(package! visual-regexp-steroids
-  :recipe (:host github :repo "benma/visual-regexp-steroids.el"))
 (package! avy)
 (package! expand-region)
 (package! iedit)
@@ -22,31 +25,10 @@
 (package! kubernetes
   :recipe (:host github :repo "chrisbarrett/kubernetes-el"))
 
-;; ─── Go Tooling ──────────────────────────────────────────────
-(package! gotest)
-(package! go-tag
-  :recipe (:host github :repo "brantou/emacs-go-tag"))
-(package! go-fill-struct
-  :recipe (:host github :repo "s-kostyaev/go-fill-struct"))
-
-;; ─── Python Tooling ──────────────────────────────────────────
-(package! pytest)
-
-;; ─── Chinese Support ─────────────────────────────────────────
-(package! pangu-spacing)
-(package! cnfonts)
-
-;; ─── Dictionary ──────────────────────────────────────────────
-(package! sdcv
-  :recipe (:host github :repo "manateelazycat/sdcv"))
-
 ;; ─── Org Extensions ──────────────────────────────────────────
 (when (featurep! :lang org +roam2)
   (package! org-roam-ui)
   (package! org-roam-bibtex))
-
-;; ─── Performance ─────────────────────────────────────────────
-(package! gcmh)
 
 ;; ─── macOS Specific ──────────────────────────────────────────
 (when IS-MAC
