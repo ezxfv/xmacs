@@ -163,25 +163,29 @@
 ;; ─── 10. AI: Agent Shell ─────────────────────────────────────
 (use-package! agent-shell
   :commands (agent-shell agent-shell-anthropic-start-claude-code)
-  :init
-  (when (getenv "ANTHROPIC_API_KEY")
+  :config
+  (when (getenv "ANTHROPIC_AUTH_TOKEN")
     (setq agent-shell-anthropic-authentication
           (agent-shell-anthropic-make-authentication
-           :api-key (getenv "ANTHROPIC_API_KEY")))
+           :api-key (getenv "ANTHROPIC_AUTH_TOKEN")))
     (setq agent-shell-preferred-agent-config
           (agent-shell-anthropic-make-claude-code-config))
     (setq agent-shell-anthropic-claude-environment
           (agent-shell-make-environment-variables
-           "ANTHROPIC_API_KEY" (getenv "ANTHROPIC_API_KEY")))))
+           "ANTHROPIC_AUTH_TOKEN" (getenv "ANTHROPIC_AUTH_TOKEN")
+           "ANTHROPIC_BASE_URL" (getenv "ANTHROPIC_BASE_URL")
+           "ANTHROPIC_MODEL" (getenv "ANTHROPIC_MODEL")))))
 
 ;; ─── 11. AI: gptel ──────────────────────────────────────────
 (use-package! gptel
   :commands (gptel gptel-send gptel-menu gptel-abort)
   :config
-  (setq gptel-model 'claude-sonnet-4-20250514
+  (setq gptel-model (or (getenv "ANTHROPIC_MODEL") "claude-sonnet-4-20250514")
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
-                        :key (getenv "ANTHROPIC_API_KEY")))
+                        :key (getenv "ANTHROPIC_AUTH_TOKEN")
+                        :host (or (getenv "ANTHROPIC_BASE_URL")
+                                  "api.anthropic.com")))
   (setq gptel-default-mode 'org-mode))
 
 ;; ─── 12. AI: ai-code-interface ───────────────────────────────
@@ -205,7 +209,7 @@
   :hook (prog-mode . minuet-auto-suggestion-mode)
   :config
   (setq minuet-provider 'claude
-        minuet-api-key (getenv "ANTHROPIC_API_KEY"))
+        minuet-api-key (getenv "ANTHROPIC_AUTH_TOKEN"))
   (setq minuet-n-completions 3
         minuet-context-window 512))
 
