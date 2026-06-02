@@ -28,7 +28,6 @@
        fold
        (format +onsave)
        multiple-cursors
-       rotate-text
        snippets
        word-wrap
 
@@ -46,7 +45,6 @@
        (syntax +childframe)
 
        :tools
-       (debugger +lsp)
        docker
        editorconfig
        (lookup +dictionary)

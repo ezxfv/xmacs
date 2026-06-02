@@ -15,6 +15,10 @@
 ;;     *  #        (evil-search-word)
 ;;     m           (evil-mark)
 
+;; Unbind keys we'll redefine as prefixes
+(map! :leader "a" nil)
+(map! :leader "e" nil)
+
 ;; ═══ Tier 1: Extreme Frequency (cost ≤ 2) ═══════════════════
 
 ;; M-RET → send to AI (THE most frequent action in AI-native workflow)
@@ -52,7 +56,7 @@
        :desc "Send buffer"          "b" #'claude-code-ide-send-buffer
        :desc "Send errors"          "e" #'claude-code-ide-send-error-context
        :desc "Abort"                "x" #'gptel-abort
-       :desc "Toggle completions"   "t" #'minuet-ai-mode))
+       :desc "Toggle completions"   "t" #'minuet-auto-suggestion-mode))
 
 ;; ─── SPC c = code (diagnostics & formatting) ─────────────────
 (map! :leader

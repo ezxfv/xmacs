@@ -106,15 +106,6 @@
     (advice-add 'lsp-resolve-final-command :around
                 #'lsp-booster--advice-final-command)))
 
-;; DAP debugging
-(use-package! dap-mode
-  :config
-  (dap-auto-configure-mode))
-
-(use-package! dap-dlv-go
-  :after dap-mode
-  :config
-  (require 'dap-dlv-go))
 
 ;; ─── 6. Go Config ─────────────────────────────────────────────
 (after! go-mode
@@ -209,9 +200,9 @@
   :config
   (setq claude-code-ide-terminal-type 'vterm))
 
-;; ─── 14. AI: minuet-ai (inline completions) ─────────────────
-(use-package! minuet-ai
-  :hook (prog-mode . minuet-ai-mode)
+;; ─── 14. AI: minuet (inline completions) ─────────────────────
+(use-package! minuet
+  :hook (prog-mode . minuet-auto-suggestion-mode)
   :config
   (setq minuet-provider 'claude
         minuet-api-key (getenv "ANTHROPIC_API_KEY"))

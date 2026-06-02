@@ -6,7 +6,8 @@
 (package! ai-code-interface
   :recipe (:host github :repo "tninja/ai-code-interface.el"))
 (package! claude-code-ide
-  :recipe (:host github :repo "manzaltu/claude-code-ide"))
+  :recipe (:host github :repo "manzaltu/claude-code-ide.el"))
+(package! plz)
 (package! minuet-ai
   :recipe (:host github :repo "milanglacier/minuet-ai.el"))
 
