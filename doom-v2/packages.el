@@ -27,7 +27,7 @@
   :recipe (:host github :repo "chrisbarrett/kubernetes-el"))
 
 ;; ─── Org Extensions ──────────────────────────────────────────
-(when (featurep! :lang org +roam2)
+(when (modulep! :lang org +roam2)
   (package! org-roam-ui)
   (package! org-roam-bibtex))
 
