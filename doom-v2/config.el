@@ -167,6 +167,7 @@
 (add-to-list 'auto-mode-alist '("\\.gotmpl\\'" . go-mode))
 
 ;; ─── 11. AI: Agent Workspace ─────────────────────────────────
+(load! "ai-provider")
 (load! "agent-workflow")
 
 (use-package! agent-shell
@@ -174,23 +175,29 @@
              agent-shell-new-shell
              agent-shell-send-dwim
              agent-shell-send-region
+             agent-shell-openai-start-codex
              agent-shell-anthropic-start-claude-code)
   :init
-  (setq agent-shell-preferred-agent-config 'claude-code
+  (setq agent-shell-preferred-agent-config 'codex
         agent-shell-session-strategy 'prompt
         agent-shell-session-restore-strategy 'minimal
         agent-shell-show-session-id t
-        agent-shell-display-action '(display-buffer-same-window))
+        agent-shell-display-action '(display-buffer-same-window)
+        agent-shell-openai-codex-acp-command
+        '("npx" "-y" "@agentclientprotocol/codex-acp")
+        agent-shell-openai-default-model-id
+        (symbol-name eden-sub2api-default-model))
   :config
-  (when (getenv "ANTHROPIC_AUTH_TOKEN")
-    (setq agent-shell-anthropic-authentication
-          (agent-shell-anthropic-make-authentication
-           :api-key (getenv "ANTHROPIC_AUTH_TOKEN"))
-          agent-shell-anthropic-claude-environment
-          (agent-shell-make-environment-variables
-           "ANTHROPIC_AUTH_TOKEN" (getenv "ANTHROPIC_AUTH_TOKEN")
-           "ANTHROPIC_BASE_URL" (getenv "ANTHROPIC_BASE_URL")
-           "ANTHROPIC_MODEL" (getenv "ANTHROPIC_MODEL")))))
+  (setq agent-shell-openai-authentication
+        (agent-shell-openai-make-authentication :api-key #'eden-sub2api-token)
+        agent-shell-openai-codex-environment
+        (agent-shell-make-environment-variables
+         "SUB2API_TOKEN" (eden-sub2api-token)
+         "CODEX_API_KEY" (eden-sub2api-token)
+         "CODEX_CONFIG" (eden-sub2api-codex-config)
+         "MODEL_PROVIDER" "sub2api"
+         "NO_BROWSER" "1"
+         :inherit-env t)))
 
 (use-package! agent-shell-workspace
   :after agent-shell
@@ -198,17 +205,23 @@
   :init
   (setq agent-shell-workspace-sidebar-width 28))
 
-;; ─── 11. AI: gptel ──────────────────────────────────────────
+;; ─── 12. AI: gptel ──────────────────────────────────────────
 (use-package! gptel
   :commands (gptel gptel-send gptel-menu gptel-abort)
   :config
-  (setq gptel-model (or (getenv "ANTHROPIC_MODEL") "claude-opus-5-5")
-        gptel-backend (gptel-make-anthropic "Claude"
-                        :stream t
-                        :key (getenv "ANTHROPIC_AUTH_TOKEN")
-                        :host (or (getenv "ANTHROPIC_BASE_URL")
-                                  "api.anthropic.com")))
-  (setq gptel-default-mode 'org-mode))
+  (setq gptel-model eden-sub2api-default-model
+        gptel-backend
+        (gptel-make-openai "Sub2API"
+          :host "sub2api.fibbery.top"
+          :endpoint "/v1/chat/completions"
+          :stream t
+          :key #'eden-sub2api-token
+          :models (mapcar (lambda (model)
+                            (if (eq model eden-sub2api-default-model)
+                                (list model :capabilities '(tool json))
+                              model))
+                          eden-sub2api-models))
+        gptel-default-mode 'org-mode))
 
 ;; ─── 12. AI: ai-code-interface ───────────────────────────────
 (use-package! ai-code
@@ -240,14 +253,25 @@
   (setq claude-code-ide-terminal-backend 'vterm
         claude-code-ide-enable-execute-code nil))
 
-;; ─── 14. AI: minuet (inline completions) ─────────────────────
+;; ─── 15. AI: minuet (inline completions) ─────────────────────
 (use-package! minuet
   :hook (prog-mode . minuet-auto-suggestion-mode)
+  :init
+  (setq minuet-provider 'openai-compatible
+        minuet-n-completions 1
+        minuet-context-window 8000
+        minuet-request-timeout 15)
   :config
-  (setq minuet-provider 'claude
-        minuet-api-key (getenv "ANTHROPIC_AUTH_TOKEN"))
-  (setq minuet-n-completions 3
-        minuet-context-window 512))
+  (setq minuet-openai-compatible-options
+        (plist-put minuet-openai-compatible-options
+                   :end-point
+                   (concat eden-sub2api-base-url "/v1/chat/completions")))
+  (setq minuet-openai-compatible-options
+        (plist-put minuet-openai-compatible-options :api-key "SUB2API_TOKEN"))
+  (setq minuet-openai-compatible-options
+        (plist-put minuet-openai-compatible-options
+                   :model
+                   (symbol-name eden-sub2api-default-model))))
 
 ;; ─── 15. Org-mode ────────────────────────────────────────────
 (setq org-directory "~/org/")
