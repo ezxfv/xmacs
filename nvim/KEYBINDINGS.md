@@ -333,9 +333,115 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 | `SPC uv` | 开关虚拟文本诊断 |
 | `SPC uV` | 开关虚拟行诊断 |
 
-## 11. Git、Hunk 与 Diff
+## 11. 问题面板与测试
 
-### 11.1 仓库与提交搜索
+### 11.1 Trouble 问题面板
+
+Trouble 用持久化树形面板汇总诊断、Quickfix、Location List 和 TODO，适合修改代码后持续观察错误是否收敛。
+
+| 快捷键 | 功能 |
+|---|---|
+| `SPC xX` | 打开或关闭工作区诊断面板 |
+| `SPC xx` | 打开或关闭当前文件诊断面板 |
+| `SPC xQ` | 用 Trouble 打开 Quickfix |
+| `SPC xL` | 用 Trouble 打开 Location List |
+| `SPC xt` | 显示全部 TODO 注释 |
+| `SPC xT` | 只显示 TODO、FIX、FIXME |
+| Trouble 中 `Enter` | 跳转到选中问题 |
+| Trouble 中 `q`、`Esc` 或 `C-e` | 关闭面板 |
+| Snacks 搜索中 `C-t` | 将当前搜索结果发送到 Trouble |
+
+### 11.2 Neotest 测试
+
+当前语言包已接入 Go、Python、Jest/TypeScript 和 Rust 测试适配器。
+
+| 快捷键 | 功能 |
+|---|---|
+| `SPC Tt` | 运行光标所在或最近的测试 |
+| `SPC Tf` | 运行当前文件全部测试 |
+| `SPC Tp` | 运行当前项目全部测试 |
+| `SPC Td` | 通过 DAP 调试当前测试 |
+| `SPC T<Enter>` | 打开或关闭测试树 |
+| `SPC To` | 浮窗查看当前测试输出 |
+| `SPC TO` | 打开或关闭测试输出面板 |
+| `[T` / `]T` | 跳到上一个/下一个测试 |
+| `SPC TWt` | 开关当前测试 watch |
+| `SPC TWf` | 开关当前文件测试 watch |
+| `SPC TWp` | 开关当前项目测试 watch |
+| `SPC TWS` | 停止所有 watch |
+
+建议优先运行最小相关测试 `SPC Tt`，再运行文件测试 `SPC Tf`，最后运行项目测试 `SPC Tp`，这样失败定位最快。
+
+## 12. REST Client 与数据库
+
+### 12.1 从 `.http` 文件发送请求
+
+使用 `rest.nvim`。每个请求用 `###` 分隔，光标放在请求任意一行即可发送。
+
+```http
+@baseUrl = https://httpbin.org
+
+### 查询用户
+GET {{baseUrl}}/get?id=42
+Accept: application/json
+
+### 创建用户
+POST {{baseUrl}}/post
+Content-Type: application/json
+
+{
+  "name": "Eden"
+}
+```
+
+| 快捷键/命令 | 功能 |
+|---|---|
+| `SPC rr` | 发送光标所在请求 |
+| `SPC rl` | 重发最近一次请求 |
+| `SPC re` | 为当前 `.http` 文件选择 `.env` 环境文件 |
+| `SPC rE` | 显示当前 `.http` 文件使用的环境 |
+| `:Rest run` | 发送光标所在请求 |
+| `:Rest run 请求名` | 发送指定名称的请求 |
+| `:Rest env set 路径` | 为当前文件指定环境文件 |
+| 结果窗口 `H` / `L` | 上一个/下一个结果页 |
+| 结果窗口 `?` | 查看结果窗口帮助 |
+
+环境变量文件中的 token、密码不应提交到 Git；项目应将实际 `.env` 加入 `.gitignore`，只提交无密钥的示例文件。
+
+### 12.2 数据库连接与 SQL 执行
+
+使用 `vim-dadbod`、Dadbod UI 和 SQL 补全。已关闭“保存 SQL 文件时自动执行”，所有查询必须显式触发。
+
+| 快捷键 | 功能 |
+|---|---|
+| `SPC Du` | 打开或关闭数据库 UI |
+| `SPC Da` | 添加数据库连接 |
+| `SPC Df` | 定位当前数据库查询 Buffer |
+| SQL 普通模式 `,e` | 执行光标所在 SQL 语句 |
+| SQL 可视模式 `,e` | 执行选中的 SQL |
+| SQL 普通模式 `,b` | 执行整个 SQL Buffer |
+
+连接 URL 示例：
+
+```text
+postgresql://user:password@host:5432/database
+mysql://user:password@host:3306/database
+sqlite:/absolute/path/to/database.sqlite3
+```
+
+推荐流程：
+
+1. `SPC Du` 打开数据库 UI。
+2. 在数据库 UI 中按 `A`，输入连接名称和 URL。
+3. 展开连接并打开一个查询 Buffer，或在普通 `.sql` 文件中设置 `$DATABASE_URL`。
+4. 将光标放在目标语句内按 `,e`；解析基于 Treesitter SQL 语法节点，不会默认执行整个文件。
+5. 需要执行多条语句时先可视选择，再按 `,e`。
+
+> `INSERT`、`UPDATE`、`DELETE`、DDL 等语句会真实修改数据库。插件不会自动添加事务或回滚；对生产库执行前先确认连接和影响范围。
+
+## 13. Git、Hunk 与 Diff
+
+### 13.1 仓库与提交搜索
 
 | 快捷键 | 功能 |
 |---|---|
@@ -346,7 +452,7 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 | `SPC gT` | 搜索 stash |
 | `SPC go` | 在浏览器打开当前仓库、文件或行 |
 
-### 11.2 当前文件 Hunk
+### 13.2 当前文件 Hunk
 
 以下映射在 Git 管理的文件中生效。
 
@@ -366,7 +472,7 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 
 > `SPC gr` 和 `SPC gR` 会丢弃未提交内容；后者影响整个文件，执行前先预览或提交。
 
-### 11.3 Diffview
+### 13.3 Diffview
 
 | 快捷键 | 功能 |
 |---|---|
@@ -399,7 +505,7 @@ Diffview 内部：
 | `L` | 查看提交详情 |
 | `R` | 刷新文件列表 |
 
-### 11.4 合并冲突
+### 13.4 合并冲突
 
 在 Diffview merge-tool 中：
 
@@ -414,7 +520,7 @@ Diffview 内部：
 | `SPC cO/cT/cB/cA` | 对整个文件分别选择 ours/theirs/base/all |
 | `dX` | 删除整个文件的所有冲突区域 |
 
-## 12. 调试
+## 14. 调试
 
 已配置 nvim-dap、DAP UI 和虚拟变量文本。Go、Python、JavaScript/TypeScript、Rust、Shell 的调试适配器由 Mason 管理。
 
@@ -438,7 +544,26 @@ Diffview 内部：
 | `SPC dE` | 输入表达式并求值 |
 | 可视模式 `SPC dE` | 对选中表达式求值 |
 
-## 13. 终端
+## 15. 终端与任务
+
+### 15.1 Overseer 项目任务
+
+Overseer 统一运行并追踪 Makefile、npm scripts、构建、lint、测试及自定义命令。任务保留状态和输出，比散落的终端窗口更容易复查。
+
+| 快捷键 | 功能 |
+|---|---|
+| `SPC Mr` | 从项目模板中选择并运行任务 |
+| `SPC Mc` | 输入并运行任意 Shell 命令 |
+| `SPC Mt` | 打开或关闭任务列表 |
+| `SPC Ma` | 对选中任务执行重启、停止、查看输出等操作 |
+| `SPC Mi` | 运行 Overseer 健康检查 |
+| 任务列表中 `q` | 关闭任务列表 |
+| 任务列表中 `K` / `J` | 增加/减少任务详情 |
+| 任务列表中 `C-p` / `C-n` | 向上/向下滚动任务输出 |
+
+推荐用 Overseer 执行可重复的项目级命令；一次性探索命令继续使用终端。
+
+### 15.2 终端
 
 | 快捷键 | 功能 |
 |---|---|
@@ -451,7 +576,7 @@ Diffview 内部：
 | 终端中 `C-h/j/k/l` | 从终端移动到相邻窗口 |
 | 终端中 `C-\ C-n` | 返回普通模式 |
 
-## 14. 会话管理
+## 16. 会话管理
 
 | 快捷键 | 功能 |
 |---|---|
@@ -465,7 +590,7 @@ Diffview 内部：
 | `SPC St` | 保存当前标签页会话 |
 | `SPC Sl` | 加载最近会话 |
 
-## 15. 显示与编辑器开关
+## 17. 显示与编辑器开关
 
 | 快捷键 | 功能 |
 |---|---|
@@ -485,7 +610,7 @@ Diffview 内部：
 | `SPC ur` | 当前符号引用高亮 |
 | `[r` / `]r` | 上一个/下一个符号引用 |
 
-## 16. 插件与工具维护
+## 18. 插件与工具维护
 
 | 快捷键/命令 | 功能 |
 |---|---|
@@ -501,7 +626,7 @@ Diffview 内部：
 | `:Mason` | 打开语言工具管理器 |
 | `:checkhealth` | 执行健康检查 |
 
-## 17. 推荐工作流速查
+## 19. 推荐工作流速查
 
 ### 修改当前符号的所有语义引用
 
@@ -516,12 +641,15 @@ Diffview 内部：
 3. 按 `c` 输入新文本。
 4. 按 `Esc` 完成。
 
-### 审查并暂存变更
+### 完成一次代码验证闭环
 
-1. `SPC gd` 打开 Diffview。
-2. 用 `Tab` / `S-Tab` 浏览文件。
-3. 在文件面板按 `s` 暂存确认过的文件。
-4. `SPC gD` 关闭 Diffview。
+1. `SPC xx` 检查当前文件诊断，消除静态错误。
+2. `SPC Tt` 运行最小相关测试，必要时 `SPC Td` 调试失败测试。
+3. `SPC Tf` 运行当前文件测试，再用 `SPC Tp` 运行项目测试。
+4. `SPC Mr` 运行项目 lint/build 任务，用 `SPC Mt` 检查输出。
+5. `SPC gd` 打开 Diffview 审查变更。
+6. 用 `Tab` / `S-Tab` 浏览文件，在文件面板按 `s` 暂存确认过的文件。
+7. `SPC gD` 关闭 Diffview。
 
 ### 从诊断定位并修复
 

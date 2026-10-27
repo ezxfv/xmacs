@@ -193,6 +193,99 @@ return {
     end,
   },
   {
+    "rest-nvim/rest.nvim",
+    dependencies = {
+      "j-hui/fidget.nvim",
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              ["<Leader>re"] = { "<Cmd>Rest env select<CR>", desc = "Select HTTP environment" },
+              ["<Leader>rE"] = { "<Cmd>Rest env show<CR>", desc = "Show HTTP environment" },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    "kristijanhusak/vim-dadbod-ui",
+    dependencies = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          options = {
+            g = {
+              db_ui_execute_on_save = 0,
+              db_ui_show_database_icon = 1,
+              db_ui_use_nerd_fonts = 1,
+            },
+          },
+          mappings = {
+            n = {
+              ["<Leader>D"] = { desc = "Database" },
+              ["<Leader>Du"] = { "<Cmd>DBUIToggle<CR>", desc = "Toggle database UI" },
+              ["<Leader>Da"] = { "<Cmd>DBUIAddConnection<CR>", desc = "Add database connection" },
+              ["<Leader>Df"] = { "<Cmd>DBUIFindBuffer<CR>", desc = "Find database buffer" },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    "tpope/vim-dadbod",
+    dependencies = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          autocmds = {
+            dadbod_sql_mappings = {
+              {
+                event = "FileType",
+                pattern = { "sql", "mysql", "plsql" },
+                desc = "Configure SQL execution mappings",
+                callback = function(args)
+                  vim.keymap.set("n", "<LocalLeader>e", function()
+                    local node = vim.treesitter.get_node { bufnr = args.buf }
+                    while node and not node:type():match "statement$" do
+                      node = node:parent()
+                    end
+                    if not node then
+                      vim.notify("No SQL statement found at cursor", vim.log.levels.ERROR)
+                      return
+                    end
+
+                    local start_row, start_col, end_row, end_col = node:range()
+                    local lines = vim.api.nvim_buf_get_text(args.buf, start_row, start_col, end_row, end_col, {})
+                    local query = table.concat(lines, "\n")
+                    if vim.trim(query) == "" then
+                      vim.notify("SQL statement is empty", vim.log.levels.ERROR)
+                      return
+                    end
+                    vim.cmd { cmd = "DB", args = { query } }
+                  end, { buffer = args.buf, desc = "Execute SQL statement at cursor" })
+
+                  vim.keymap.set("x", "<LocalLeader>e", ":DB<CR>", {
+                    buffer = args.buf,
+                    desc = "Execute selected SQL",
+                    silent = true,
+                  })
+                  vim.keymap.set("n", "<LocalLeader>b", "<Cmd>%DB<CR>", {
+                    buffer = args.buf,
+                    desc = "Execute SQL buffer",
+                    silent = true,
+                  })
+                end,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {

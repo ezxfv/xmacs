@@ -2,6 +2,16 @@
 return {
   "AstroNvim/astrocommunity",
 
+  -- Deterministic verification loop: diagnostics, tests, and project tasks.
+  { import = "astrocommunity.diagnostics.trouble-nvim" },
+  { import = "astrocommunity.test.neotest" },
+  { import = "astrocommunity.code-runner.overseer-nvim" },
+
+  -- HTTP requests and database exploration from source files.
+  { import = "astrocommunity.programming-language-support.rest-nvim" },
+  { import = "astrocommunity.pack.full-dadbod" },
+  { import = "astrocommunity.pack.sql" },
+
   -- Language support matching the non-AI programming stack in doom-v2.
   { import = "astrocommunity.pack.go" },
   { import = "astrocommunity.pack.python" },

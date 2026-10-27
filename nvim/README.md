@@ -8,6 +8,8 @@
 - 搜索与切换：Snacks Picker
 - Git 与 diff：Gitsigns、Diffview
 - 代码能力：LSP、Treesitter、格式化、诊断、补全
+- 验证闭环：Trouble、Neotest、Overseer
+- API 与数据库：rest.nvim、vim-dadbod、Dadbod UI
 - 调试：nvim-dap、nvim-dap-ui、虚拟文本
 - 语言：Go、Python、TypeScript/JavaScript、Rust、Lua、Shell、JSON、YAML、Docker、Markdown
 
