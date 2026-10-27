@@ -28,8 +28,11 @@
       (setq doom-theme 'tsdh-light))
   (setq doom-theme 'tsdh-dark))
 
-;; ─── 3. Evil Base Config ─────────────────────────────────────
-(setq native-comp-async-report-warnings-errors nil)
+;; ─── 3. Runtime & Evil Base Config ───────────────────────────
+(setq native-comp-async-report-warnings-errors nil
+      ;; LSP and coding agents are subprocess-heavy; the 64 KiB default
+      ;; throttles large JSON and terminal output.
+      read-process-output-max (* 1024 1024))
 
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
@@ -160,27 +163,41 @@
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . go-mode))
 (add-to-list 'auto-mode-alist '("\\.gotmpl\\'" . go-mode))
 
-;; ─── 10. AI: Agent Shell ─────────────────────────────────────
+;; ─── 10. AI: Agent Workspace ─────────────────────────────────
 (use-package! agent-shell
-  :commands (agent-shell agent-shell-anthropic-start-claude-code)
+  :commands (agent-shell
+             agent-shell-new-shell
+             agent-shell-send-dwim
+             agent-shell-send-region
+             agent-shell-anthropic-start-claude-code)
+  :init
+  (setq agent-shell-preferred-agent-config 'claude-code
+        agent-shell-session-strategy 'prompt
+        agent-shell-session-restore-strategy 'minimal
+        agent-shell-show-session-id t
+        agent-shell-display-action '(display-buffer-same-window))
   :config
   (when (getenv "ANTHROPIC_AUTH_TOKEN")
     (setq agent-shell-anthropic-authentication
           (agent-shell-anthropic-make-authentication
-           :api-key (getenv "ANTHROPIC_AUTH_TOKEN")))
-    (setq agent-shell-preferred-agent-config
-          (agent-shell-anthropic-make-claude-code-config))
-    (setq agent-shell-anthropic-claude-environment
+           :api-key (getenv "ANTHROPIC_AUTH_TOKEN"))
+          agent-shell-anthropic-claude-environment
           (agent-shell-make-environment-variables
            "ANTHROPIC_AUTH_TOKEN" (getenv "ANTHROPIC_AUTH_TOKEN")
            "ANTHROPIC_BASE_URL" (getenv "ANTHROPIC_BASE_URL")
            "ANTHROPIC_MODEL" (getenv "ANTHROPIC_MODEL")))))
 
+(use-package! agent-shell-workspace
+  :after agent-shell
+  :commands agent-shell-workspace-toggle
+  :init
+  (setq agent-shell-workspace-sidebar-width 28))
+
 ;; ─── 11. AI: gptel ──────────────────────────────────────────
 (use-package! gptel
   :commands (gptel gptel-send gptel-menu gptel-abort)
   :config
-  (setq gptel-model (or (getenv "ANTHROPIC_MODEL") "claude-sonnet-4-20250514")
+  (setq gptel-model (or (getenv "ANTHROPIC_MODEL") "claude-opus-5-5")
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
                         :key (getenv "ANTHROPIC_AUTH_TOKEN")
@@ -189,11 +206,24 @@
   (setq gptel-default-mode 'org-mode))
 
 ;; ─── 12. AI: ai-code-interface ───────────────────────────────
-(use-package! ai-code-interface
-  :commands (ai-code-menu)
+(use-package! ai-code
+  :commands (ai-code-menu
+             ai-code-session-dashboard
+             ai-code-code-change
+             ai-code-ask-question
+             ai-code-explain
+             ai-code-explain-code-change
+             ai-code-pull-or-review-diff-file)
+  :init
+  (setq ai-code-menu-layout 'two-columns
+        ai-code-quick-prompts
+        '("先只读分析并给出可验证的实施方案，不要修改文件。"
+          "审查当前分支相对默认分支的改动，只报告可复现的问题。"
+          "解释当前上下文的设计意图、数据流、约束和主要风险。"))
   :config
-  (setq ai-code-interface-default-backend "claude-code"
-        ai-code-interface-terminal-type 'vterm))
+  (ai-code-set-backend 'agent-shell)
+  (require 'ai-code-session-attention)
+  (ai-code-session-attention-mode 1))
 
 ;; ─── 13. AI: Claude Code IDE ─────────────────────────────────
 (use-package! claude-code-ide
@@ -201,8 +231,9 @@
              claude-code-ide-send-region
              claude-code-ide-send-buffer
              claude-code-ide-send-error-context)
-  :config
-  (setq claude-code-ide-terminal-type 'vterm))
+  :init
+  (setq claude-code-ide-terminal-backend 'vterm
+        claude-code-ide-enable-execute-code nil))
 
 ;; ─── 14. AI: minuet (inline completions) ─────────────────────
 (use-package! minuet

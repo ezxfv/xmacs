@@ -21,8 +21,8 @@
 
 ;; ═══ Tier 1: Extreme Frequency (cost ≤ 2) ═══════════════════
 
-;; M-RET → send to AI (THE most frequent action in AI-native workflow)
-(map! :nvi "M-RET" #'gptel-send)
+;; M-RET → send editor context to the active project agent
+(map! :nvi "M-RET" #'agent-shell-send-dwim)
 
 ;; SPC j → jump to any visible position (j = jump)
 (map! :leader
@@ -42,20 +42,26 @@
 
 ;; ═══ Tier 2: High Frequency (cost = 3) ══════════════════════
 
-;; ─── SPC a = AI (a = AI, home row) ───────────────────────────
+;; ─── SPC a = AI workspace ────────────────────────────────────
 (map! :leader
       (:prefix ("a" . "AI")
-       :desc "AI code menu"         "a" #'ai-code-menu
-       :desc "Send to AI"           "s" #'gptel-send
-       :desc "Claude IDE start"     "c" #'claude-code-ide-start
+       :desc "Command center"       "a" #'ai-code-menu
+       :desc "Agent workspace"      "w" #'agent-shell-workspace-toggle
+       :desc "Session dashboard"    "d" #'ai-code-session-dashboard
+       :desc "New agent"            "n" #'agent-shell-new-shell
+       :desc "Switch/start agent"   "s" #'agent-shell
+       :desc "Send context"         "RET" #'agent-shell-send-dwim
+       :desc "Code change"          "c" #'ai-code-code-change
+       :desc "Ask about context"    "q" #'ai-code-ask-question
+       :desc "Explain context"      "e" #'ai-code-explain
+       :desc "Explain changes"      "E" #'ai-code-explain-code-change
+       :desc "Review changes/PR"    "r" #'ai-code-pull-or-review-diff-file
+       :desc "Quick prompt"         "p" #'ai-code-send-quick-prompt
+       :desc "Checkpoint"           "k" #'ai-code-session-checkpoint
+       :desc "Claude IDE"           "i" #'claude-code-ide-start
        :desc "gptel chat"           "g" #'gptel
-       :desc "Agent shell"          "S" #'agent-shell
-       :desc "Claude Code shell"    "C" #'agent-shell-anthropic-start-claude-code
-       :desc "Model/menu"           "m" #'gptel-menu
-       :desc "Send region"          "r" #'claude-code-ide-send-region
-       :desc "Send buffer"          "b" #'claude-code-ide-send-buffer
-       :desc "Send errors"          "e" #'claude-code-ide-send-error-context
-       :desc "Abort"                "x" #'gptel-abort
+       :desc "gptel menu"           "m" #'gptel-menu
+       :desc "Abort gptel"          "x" #'gptel-abort
        :desc "Toggle completions"   "t" #'minuet-auto-suggestion-mode))
 
 ;; ─── SPC c = code (diagnostics & formatting) ─────────────────
@@ -119,6 +125,7 @@
 
 (map!
  "C-c a" #'ai-code-menu
+ "C-c A" #'agent-shell-workspace-toggle
  "C-c d" #'crux-duplicate-current-line-or-region
  "C-c n" #'crux-cleanup-buffer-or-region)
 

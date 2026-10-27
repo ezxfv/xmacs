@@ -2,6 +2,8 @@
 
 ;; ─── AI ──────────────────────────────────────────────────────
 (package! agent-shell)
+(package! agent-shell-workspace
+  :recipe (:host github :repo "gveres/agent-shell-workspace"))
 (package! gptel)
 (package! ai-code-interface
   :recipe (:host github :repo "tninja/ai-code-interface.el"))
