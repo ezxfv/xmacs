@@ -148,7 +148,8 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 | `SPC fO` | 搜索当前目录的最近文件 |
 | `SPC f'` | 搜索 marks |
 | `SPC fr` | 搜索寄存器 |
-| `SPC fu` | 搜索撤销历史 |
+| `SPC fu` | 搜索当前文件的撤销历史 |
+| `SPC fU` | 打开可视化撤销树，浏览分支历史 |
 | `SPC fC` | 搜索命令 |
 | `SPC fh` | 搜索帮助 |
 | `SPC fm` | 搜索 man page |
@@ -276,7 +277,23 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 
 直接无确认跨文件替换前先提交或暂存 Git 变更；否则回滚边界不清晰。
 
-### 8.3 宏：结构相同但文本不同的重复修改
+### 8.3 Grug-far 交互式跨文件替换
+
+Grug-far 提供可编辑结果、Diff 预览、文件过滤和替换历史，适合项目级文本迁移。代码符号仍优先使用 LSP rename。
+
+| 快捷键 | 功能 |
+|---|---|
+| `SPC ss` | 打开工作区搜索替换 |
+| `SPC se` | 只搜索当前文件类型 |
+| `SPC sf` | 只搜索当前文件 |
+| `SPC sw` | 以光标下单词预填搜索 |
+| 可视模式 `SPC s` | 以选区预填搜索 |
+| Grug-far 中 `,r` | 应用替换 |
+| Grug-far 中 `,c` | 关闭替换 Buffer |
+
+推荐先检查结果 Diff 并删除不应修改的结果行，再执行 `,r`。替换后使用 `SPC gd` 审查真实文件改动。
+
+### 8.4 宏：结构相同但文本不同的重复修改
 
 1. 按 `qa` 开始录制到寄存器 `a`。
 2. 完成一次修改和移动到下一个目标的操作。
@@ -286,7 +303,26 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 
 宏适合无法用单个正则表达式描述、但编辑动作高度重复的场景。
 
-## 9. LSP、代码导航与重构
+## 9. CSV/TSV 表格预览
+
+打开 `.csv` 或 `.tsv` 文件时会自动启用 `csvview.nvim`：异步解析并按列对齐，表头固定显示，编辑原始文本时视图实时更新。默认支持逗号、Tab、分号和竖线分隔符。
+
+| 快捷键/命令 | 功能 |
+|---|---|
+| `SPC cv` | 打开或关闭当前 CSV/TSV 表格视图 |
+| `SPC ci` | 查看当前解析信息与检测到的格式 |
+| `Tab` / `S-Tab` | 下一个/上一个字段 |
+| `Enter` / `S-Enter` | 下一行/上一行对应字段 |
+| 可视/操作模式 `if` | 选择字段内容，不包含分隔符 |
+| 可视/操作模式 `af` | 选择整个字段 |
+| `:CsvViewEnable delimiter=;` | 使用指定分隔符开启视图 |
+| `:CsvViewEnable display_mode=border` | 使用边框模式展示分隔符 |
+| `:CsvViewEnable sticky_columns=2` | 固定前两列 |
+| `:CsvViewDisable` | 关闭表格视图 |
+
+表格视图使用虚拟文本对齐，不会重写 CSV 内容；保存时仍保存原始分隔格式。
+
+## 10. LSP、代码导航与重构
 
 以下映射在语言服务器成功附着后生效。
 
@@ -316,7 +352,7 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 
 批量重命名代码符号优先使用 `SPC lr`，因为 LSP 能区分同名但语义不同的变量；纯文本替换才使用 `:%s` 或多光标。
 
-## 10. 诊断、Quickfix 与列表
+## 11. 诊断、Quickfix 与列表
 
 | 快捷键 | 功能 |
 |---|---|
@@ -333,9 +369,9 @@ Buffer 是已载入内存的文件，不等同于窗口或标签页。
 | `SPC uv` | 开关虚拟文本诊断 |
 | `SPC uV` | 开关虚拟行诊断 |
 
-## 11. 问题面板与测试
+## 12. 问题面板与测试
 
-### 11.1 Trouble 问题面板
+### 12.1 Trouble 问题面板
 
 Trouble 用持久化树形面板汇总诊断、Quickfix、Location List 和 TODO，适合修改代码后持续观察错误是否收敛。
 
@@ -351,7 +387,7 @@ Trouble 用持久化树形面板汇总诊断、Quickfix、Location List 和 TODO
 | Trouble 中 `q`、`Esc` 或 `C-e` | 关闭面板 |
 | Snacks 搜索中 `C-t` | 将当前搜索结果发送到 Trouble |
 
-### 11.2 Neotest 测试
+### 12.2 Neotest 测试
 
 当前语言包已接入 Go、Python、Jest/TypeScript 和 Rust 测试适配器。
 
@@ -372,9 +408,9 @@ Trouble 用持久化树形面板汇总诊断、Quickfix、Location List 和 TODO
 
 建议优先运行最小相关测试 `SPC Tt`，再运行文件测试 `SPC Tf`，最后运行项目测试 `SPC Tp`，这样失败定位最快。
 
-## 12. REST Client 与数据库
+## 13. REST Client 与数据库
 
-### 12.1 从 `.http` 文件发送请求
+### 13.1 从 `.http` 文件发送请求
 
 使用 `rest.nvim`。每个请求用 `###` 分隔，光标放在请求任意一行即可发送。
 
@@ -408,7 +444,7 @@ Content-Type: application/json
 
 环境变量文件中的 token、密码不应提交到 Git；项目应将实际 `.env` 加入 `.gitignore`，只提交无密钥的示例文件。
 
-### 12.2 数据库连接与 SQL 执行
+### 13.2 数据库连接与 SQL 执行
 
 使用 `vim-dadbod`、Dadbod UI 和 SQL 补全。已关闭“保存 SQL 文件时自动执行”，所有查询必须显式触发。
 
@@ -439,9 +475,9 @@ sqlite:/absolute/path/to/database.sqlite3
 
 > `INSERT`、`UPDATE`、`DELETE`、DDL 等语句会真实修改数据库。插件不会自动添加事务或回滚；对生产库执行前先确认连接和影响范围。
 
-## 13. Git、Hunk 与 Diff
+## 14. Git、Hunk 与 Diff
 
-### 13.1 仓库与提交搜索
+### 14.1 仓库与提交搜索
 
 | 快捷键 | 功能 |
 |---|---|
@@ -452,7 +488,7 @@ sqlite:/absolute/path/to/database.sqlite3
 | `SPC gT` | 搜索 stash |
 | `SPC go` | 在浏览器打开当前仓库、文件或行 |
 
-### 13.2 当前文件 Hunk
+### 14.2 当前文件 Hunk
 
 以下映射在 Git 管理的文件中生效。
 
@@ -472,7 +508,7 @@ sqlite:/absolute/path/to/database.sqlite3
 
 > `SPC gr` 和 `SPC gR` 会丢弃未提交内容；后者影响整个文件，执行前先预览或提交。
 
-### 13.3 Diffview
+### 14.3 Diffview
 
 | 快捷键 | 功能 |
 |---|---|
@@ -505,7 +541,7 @@ Diffview 内部：
 | `L` | 查看提交详情 |
 | `R` | 刷新文件列表 |
 
-### 13.4 合并冲突
+### 14.4 合并冲突
 
 在 Diffview merge-tool 中：
 
@@ -520,7 +556,7 @@ Diffview 内部：
 | `SPC cO/cT/cB/cA` | 对整个文件分别选择 ours/theirs/base/all |
 | `dX` | 删除整个文件的所有冲突区域 |
 
-## 14. 调试
+## 15. 调试
 
 已配置 nvim-dap、DAP UI 和虚拟变量文本。Go、Python、JavaScript/TypeScript、Rust、Shell 的调试适配器由 Mason 管理。
 
@@ -544,9 +580,9 @@ Diffview 内部：
 | `SPC dE` | 输入表达式并求值 |
 | 可视模式 `SPC dE` | 对选中表达式求值 |
 
-## 15. 终端与任务
+## 16. 终端与任务
 
-### 15.1 Overseer 项目任务
+### 16.1 Overseer 项目任务
 
 Overseer 统一运行并追踪 Makefile、npm scripts、构建、lint、测试及自定义命令。任务保留状态和输出，比散落的终端窗口更容易复查。
 
@@ -563,7 +599,7 @@ Overseer 统一运行并追踪 Makefile、npm scripts、构建、lint、测试�
 
 推荐用 Overseer 执行可重复的项目级命令；一次性探索命令继续使用终端。
 
-### 15.2 多终端管理
+### 16.2 多终端管理
 
 终端由 `toggleterm.nvim` 管理，每个终端都有独立 Buffer、进程、编号和可选名称。终端的 winbar 会显示 `Terminal 编号 · 名称`。
 
@@ -588,7 +624,7 @@ Overseer 统一运行并追踪 Makefile、npm scripts、构建、lint、测试�
 
 注意：ToggleTerm 不支持同时显示不同方向的多个终端窗口。例如一个水平终端和一个浮动终端不能同时保持打开；终端 Buffer 和进程仍可同时存在，并可通过 `SPC ts` 切换。
 
-## 16. 会话管理
+## 17. 会话管理
 
 | 快捷键 | 功能 |
 |---|---|
@@ -602,7 +638,7 @@ Overseer 统一运行并追踪 Makefile、npm scripts、构建、lint、测试�
 | `SPC St` | 保存当前标签页会话 |
 | `SPC Sl` | 加载最近会话 |
 
-## 17. 显示与编辑器开关
+## 18. 显示与编辑器开关
 
 | 快捷键 | 功能 |
 |---|---|
@@ -622,7 +658,7 @@ Overseer 统一运行并追踪 Makefile、npm scripts、构建、lint、测试�
 | `SPC ur` | 当前符号引用高亮 |
 | `[r` / `]r` | 上一个/下一个符号引用 |
 
-## 18. 插件与工具维护
+## 19. 插件与工具维护
 
 | 快捷键/命令 | 功能 |
 |---|---|
@@ -638,7 +674,7 @@ Overseer 统一运行并追踪 Makefile、npm scripts、构建、lint、测试�
 | `:Mason` | 打开语言工具管理器 |
 | `:checkhealth` | 执行健康检查 |
 
-## 19. 推荐工作流速查
+## 20. 推荐工作流速查
 
 ### 修改当前符号的所有语义引用
 

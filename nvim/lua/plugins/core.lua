@@ -338,6 +338,73 @@ return {
     },
   },
   {
+    "hat0uma/csvview.nvim",
+    ft = { "csv", "tsv" },
+    cmd = { "CsvViewEnable", "CsvViewDisable", "CsvViewToggle", "CsvViewInfo" },
+    opts = {
+      parser = {
+        async_chunksize = 50,
+        comments = { "#", "//" },
+        delimiter = {
+          ft = { csv = ",", tsv = "\t" },
+          fallbacks = { ",", "\t", ";", "|" },
+        },
+      },
+      view = {
+        display_mode = "border",
+        header_lnum = true,
+        sticky_header = { enabled = true, separator = "─" },
+      },
+      keymaps = {
+        textobject_field_inner = { "if", mode = { "o", "x" } },
+        textobject_field_outer = { "af", mode = { "o", "x" } },
+        jump_next_field_end = { "<Tab>", mode = { "n", "v" } },
+        jump_prev_field_end = { "<S-Tab>", mode = { "n", "v" } },
+        jump_next_row = { "<Enter>", mode = { "n", "v" } },
+        jump_prev_row = { "<S-Enter>", mode = { "n", "v" } },
+      },
+    },
+    config = function(_, opts)
+      local csvview = require "csvview"
+      csvview.setup(opts)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "csv", "tsv" },
+        desc = "Enable aligned CSV/TSV view",
+        callback = function(args) csvview.enable(args.buf) end,
+      })
+    end,
+    dependencies = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          filetypes = { extension = { tsv = "tsv" } },
+          mappings = {
+            n = {
+              ["<Leader>cv"] = { "<Cmd>CsvViewToggle<CR>", desc = "Toggle CSV table view" },
+              ["<Leader>ci"] = { "<Cmd>CsvViewInfo<CR>", desc = "CSV view information" },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    dependencies = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              ["<Leader>fU"] = { "<Cmd>UndotreeToggle<CR>", desc = "Open undo tree" },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {

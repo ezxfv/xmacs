@@ -10,6 +10,7 @@
 - 代码能力：LSP、Treesitter、格式化、诊断、补全
 - 验证闭环：Trouble、Neotest、Overseer
 - API 与数据库：rest.nvim、vim-dadbod、Dadbod UI
+- 数据与重构：csvview.nvim、Grug-far、Undotree
 - 调试：nvim-dap、nvim-dap-ui、虚拟文本
 - 语言：Go、Python、TypeScript/JavaScript、Rust、Lua、Shell、JSON、YAML、Docker、Markdown
 

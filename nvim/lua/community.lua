@@ -12,6 +12,9 @@ return {
   { import = "astrocommunity.pack.full-dadbod" },
   { import = "astrocommunity.pack.sql" },
 
+  -- High-signal editing tools that fill gaps without replacing core navigation.
+  { import = "astrocommunity.search.grug-far-nvim" },
+
   -- Language support matching the non-AI programming stack in doom-v2.
   { import = "astrocommunity.pack.go" },
   { import = "astrocommunity.pack.python" },
