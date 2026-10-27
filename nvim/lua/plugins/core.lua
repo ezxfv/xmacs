@@ -193,6 +193,58 @@ return {
     end,
   },
   {
+    "akinsho/toggleterm.nvim",
+    opts = {
+      persist_mode = true,
+      persist_size = true,
+      start_in_insert = true,
+      winbar = {
+        enabled = true,
+        name_formatter = function(term) return ("Terminal %d · %s"):format(term.id, term:_display_name()) end,
+      },
+    },
+    dependencies = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              ["<Leader>tN"] = {
+                function()
+                  local Terminal = require("toggleterm.terminal").Terminal
+                  Terminal:new { direction = "float", dir = "git_dir" }:toggle()
+                end,
+                desc = "New terminal",
+              },
+              ["<Leader>ts"] = { "<Cmd>TermSelect<CR>", desc = "Select terminal" },
+              ["<Leader>tr"] = { "<Cmd>ToggleTermSetName<CR>", desc = "Rename terminal" },
+              ["<Leader>ta"] = { "<Cmd>ToggleTermToggleAll<CR>", desc = "Toggle all terminals" },
+              ["<Leader>tq"] = {
+                function()
+                  local terms = require "toggleterm.terminal"
+                  local _, term = terms.identify()
+                  if not term then
+                    vim.notify("Current buffer is not a managed terminal", vim.log.levels.WARN)
+                    return
+                  end
+                  term:shutdown()
+                end,
+                desc = "Delete current terminal",
+              },
+              ["<Leader>t1"] = { "<Cmd>1ToggleTerm<CR>", desc = "Toggle terminal 1" },
+              ["<Leader>t2"] = { "<Cmd>2ToggleTerm<CR>", desc = "Toggle terminal 2" },
+              ["<Leader>t3"] = { "<Cmd>3ToggleTerm<CR>", desc = "Toggle terminal 3" },
+              ["<Leader>t4"] = { "<Cmd>4ToggleTerm<CR>", desc = "Toggle terminal 4" },
+            },
+            t = {
+              ["<Esc><Esc>"] = { [[<C-\><C-n>]], desc = "Terminal normal mode" },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
     "rest-nvim/rest.nvim",
     dependencies = {
       "j-hui/fidget.nvim",
