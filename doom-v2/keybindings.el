@@ -1,174 +1,134 @@
 ;;; keybindings.el -*- lexical-binding: t; -*-
 ;;
-;; Designed with Huffman coding principle:
-;;   Tier 1 (per-minute):  M-key or SPC+1key  (cost ≤ 2)
-;;   Tier 2 (per-hour):    SPC+2keys          (cost = 3)
-;;   Tier 3 (per-session): SPC+2keys or M-key (cost = 3)
-;;   Tier 4 (occasional):  SPC+2keys          (cost = 3-4)
-;;
-;; All bindings are terminal-safe (no C-; C-' C-: C-= C-> C-< C-S-*)
-;;
-;;   IRON RULE: Never rebind these evil core keys:
-;;     f  F  t  T  (evil-find-char)
-;;     ;  ,        (evil-repeat-find-char)
-;;     /  ?  n  N  (evil-search)
-;;     *  #        (evil-search-word)
-;;     m           (evil-mark)
+;; Keep Doom's navigation/search vocabulary intact. This file adds one control
+;; plane under SPC a; depth follows frequency. Evil's core motions stay intact.
 
-;; Unbind keys we'll redefine as prefixes
-(map! :leader "a" nil)
-(map! :leader "e" nil)
+(map! :leader "a" nil "e" nil)
 
-;; ═══ Tier 1: Extreme Frequency (cost ≤ 2) ═══════════════════
+;; ═══ Direct, per-minute actions ═══════════════════════════════
 
-;; M-RET → send editor context to the active project agent
-(map! :nvi "M-RET" #'agent-shell-send-dwim)
+;; Send region, diagnostic at point, or current line to the project agent.
+(map! :nvi "M-RET" #'agent-shell-send-dwim
+      "M-o" #'ace-window
+      :nv "M-j" #'move-text-down
+      :nv "M-k" #'move-text-up)
 
-;; SPC j → jump to any visible position (j = jump)
 (map! :leader
-      :desc "Jump char"   "j" #'avy-goto-char-2
-      :desc "Jump line"   "J" #'avy-goto-line)
-
-;; M-o → switch window (o = other, works in any mode)
-(map! :nvi "M-o" #'ace-window)
-
-;; SPC v → expand region (v = visual expand)
-(map! :leader
-      :desc "Expand region" "v" #'er/expand-region)
-
-;; SPC d → duplicate line/region (d = duplicate)
-(map! :leader
+      :desc "Jump char" "j" #'avy-goto-char-2
+      :desc "Jump line" "J" #'avy-goto-line
+      :desc "Expand region" "v" #'er/expand-region
       :desc "Duplicate" "d" #'crux-duplicate-current-line-or-region)
 
-;; ═══ Tier 2: High Frequency (cost = 3) ══════════════════════
+;; ═══ Agent control plane ══════════════════════════════════════
+;;
+;; a s  sessions     a f  send files/context
+;; a p  plan         a d  diff/review
+;; a w  workspace    a x  interrupt/stop
 
-;; ─── SPC a = AI workspace ────────────────────────────────────
 (map! :leader
-      (:prefix ("a" . "AI")
-       :desc "Command center"       "a" #'ai-code-menu
-       :desc "Agent workspace"      "w" #'agent-shell-workspace-toggle
-       :desc "Session dashboard"    "d" #'ai-code-session-dashboard
-       :desc "New agent"            "n" #'agent-shell-new-shell
-       :desc "Switch/start agent"   "s" #'agent-shell
-       :desc "Send context"         "RET" #'agent-shell-send-dwim
-       :desc "Code change"          "c" #'ai-code-code-change
-       :desc "Ask about context"    "q" #'ai-code-ask-question
-       :desc "Explain context"      "e" #'ai-code-explain
-       :desc "Explain changes"      "E" #'ai-code-explain-code-change
-       :desc "Review changes/PR"    "r" #'ai-code-pull-or-review-diff-file
-       :desc "Quick prompt"         "p" #'ai-code-send-quick-prompt
-       :desc "Checkpoint"           "k" #'ai-code-session-checkpoint
-       :desc "Claude IDE"           "i" #'claude-code-ide-start
-       :desc "gptel chat"           "g" #'gptel
-       :desc "gptel menu"           "m" #'gptel-menu
-       :desc "Abort gptel"          "x" #'gptel-abort
-       :desc "Toggle completions"   "t" #'minuet-auto-suggestion-mode))
+      (:prefix ("a" . "agent")
+       :desc "Command center" "a" #'ai-code-menu
+       :desc "Send context" "RET" #'agent-shell-send-dwim
+       :desc "Ask about context" "q" #'ai-code-ask-question
+       :desc "Change code" "c" #'ai-code-code-change
+       :desc "Explain context" "e" #'ai-code-explain
+       :desc "Review changes/PR" "r" #'ai-code-pull-or-review-diff-file
+       :desc "Quick prompt" "i" #'ai-code-send-quick-prompt
+       (:prefix ("s" . "session")
+        :desc "Switch project agent" "s" #'eden-agent-project-buffer
+        :desc "Switch any agent" "a" #'eden-agent-switch-buffer
+        :desc "New agent" "n" #'agent-shell-new-shell
+        :desc "New worktree agent" "w" #'agent-shell-new-worktree-shell
+        :desc "Dashboard" "d" #'ai-code-session-dashboard
+        :desc "Transcript" "t" #'agent-shell-open-transcript
+        :desc "Checkpoint/handoff" "h" #'ai-code-agent-handoff-or-checkpoint)
+       (:prefix ("w" . "workspace/window")
+        :desc "Toggle agent workspace" "w" #'agent-shell-workspace-toggle
+        :desc "Dashboard" "d" #'ai-code-session-dashboard
+        :desc "Select window" "o" #'ace-window)
+       (:prefix ("f" . "file/context")
+        :desc "Send current file" "f" #'ai-code-send-current-file
+        :desc "Send other file" "o" #'ai-code-send-other-file
+        :desc "Send region" "r" #'ai-code-send-region
+        :desc "Send to agent..." "s" #'ai-code-send-dwim-to
+        :desc "Manage context" "c" #'ai-code-context-action)
+       (:prefix ("p" . "plan/task")
+        :desc "Plan beside agent" "v" #'eden-agent-plan-layout
+        :desc "Open task/plan" "p" #'eden-agent-plan
+        :desc "Checkpoint" "c" #'ai-code-session-checkpoint
+        :desc "Handoff" "h" #'ai-code-agent-handoff-or-checkpoint
+        :desc "Prompt history" "l" #'ai-code-open-prompt-file)
+       (:prefix ("d" . "diff/review")
+        :desc "Diff beside agent" "v" #'eden-agent-review-layout
+        :desc "Working tree diff" "d" #'eden-agent-diff
+        :desc "Magit status" "s" #'magit-status
+        :desc "Explain changes" "e" #'ai-code-explain-code-change
+        :desc "AI review" "r" #'ai-code-pull-or-review-diff-file)
+       (:prefix ("x" . "interrupt/stop")
+        :desc "Interrupt agent" "x" #'agent-shell-interrupt
+        :desc "Abort gptel" "g" #'gptel-abort)
+       (:prefix ("o" . "other clients")
+        :desc "Claude IDE" "c" #'claude-code-ide-start
+        :desc "gptel chat" "g" #'gptel
+        :desc "gptel menu" "m" #'gptel-menu)))
 
-;; ─── SPC c = code (diagnostics & formatting) ─────────────────
+;; ═══ Editing and diagnostics ══════════════════════════════════
+
 (map! :leader
       (:prefix ("c" . "code")
-       :desc "Format buffer"     "f" #'+format/buffer
-       :desc "List errors"       "x" #'flycheck-list-errors
-       :desc "Next error"        "n" #'flycheck-next-error
-       :desc "Previous error"    "p" #'flycheck-previous-error
-       :desc "Select checker"    "s" #'flycheck-select-checker))
-
-;; ─── SPC e = edit (multi-edit operations) ─────────────────────
-(map! :leader
+       :desc "Format buffer" "f" #'+format/buffer
+       (:prefix ("d" . "diagnostics")
+        :desc "List" "d" #'flycheck-list-errors
+        :desc "Next" "n" #'flycheck-next-error
+        :desc "Previous" "p" #'flycheck-previous-error
+        :desc "Select checker" "s" #'flycheck-select-checker))
       (:prefix ("e" . "edit")
-       :desc "iedit (edit all)"     "e" #'iedit-mode
-       :desc "Mark next"            "n" #'mc/mark-next-like-this
-       :desc "Mark previous"        "p" #'mc/mark-previous-like-this
-       :desc "Mark all"             "a" #'mc/mark-all-like-this
-       :desc "Surround"             "s" #'embrace-commander))
-
-;; ─── SPC k = kubernetes ───────────────────────────────────────
-(map! :leader
+       :desc "Edit occurrences" "e" #'iedit-mode
+       :desc "Surround" "s" #'embrace-commander
+       (:prefix ("m" . "multiple cursors")
+        :desc "Mark next" "n" #'mc/mark-next-like-this
+        :desc "Mark previous" "p" #'mc/mark-previous-like-this
+        :desc "Mark all" "a" #'mc/mark-all-like-this))
       (:prefix ("k" . "kubernetes")
-       :desc "Overview"          "o" #'kubernetes-overview
-       :desc "Display pod"       "p" #'kubernetes-display-pod
-       :desc "Display config"    "c" #'kubernetes-display-config-map
-       :desc "Display secret"    "s" #'kubernetes-display-secret))
-
-;; ═══ Tier 3: Medium Frequency ════════════════════════════════
-
-;; ─── Window management ────────────────────────────────────────
-(map! :leader
+       :desc "Overview" "o" #'kubernetes-overview
+       :desc "Pod" "p" #'kubernetes-display-pod
+       :desc "ConfigMap" "c" #'kubernetes-display-config-map
+       :desc "Secret" "s" #'kubernetes-display-secret)
+      (:prefix ("t" . "toggle")
+       :desc "AI completion" "a" #'minuet-auto-suggestion-mode
+       :desc "Input method" "i" #'toggle-input-method
+       :desc "Zen mode" "z" #'+zen/toggle-fullscreen)
+      :desc "M-x" "SPC" #'execute-extended-command
       "0" #'treemacs-select-window
       "1" #'winum-select-window-1
       "2" #'winum-select-window-2
       "3" #'winum-select-window-3
-      "4" #'winum-select-window-4
-      (:prefix ("w" . "window")
-       :desc "Split horizontal" "s" #'split-window-below
-       :desc "Split vertical"   "v" #'split-window-right))
+      "4" #'winum-select-window-4)
 
-;; ─── Move text (M-j/k = down/up, any mode) ───────────────────
-(map! :nv "M-j" #'move-text-down
-      :nv "M-k" #'move-text-up)
-
-;; ─── Toggles ─────────────────────────────────────────────────
-(map! :leader
-      (:prefix ("t" . "toggle")
-       :desc "Zen mode"          "z" #'+zen/toggle-fullscreen
-       :desc "Input method"      "i" #'toggle-input-method))
-
-;; ─── M-x ─────────────────────────────────────────────────────
-(map! :leader
-      :desc "M-x" "SPC" #'execute-extended-command)
-
-;; ═══ Tier 4: Low Frequency ═══════════════════════════════════
+;; ═══ Fallbacks and mode-local extras ══════════════════════════
 
 (global-set-key (kbd "<f12>") #'smerge-vc-next-conflict)
 
-;; ═══ Insert Mode: C-c fallbacks ══════════════════════════════
+(map! :leader
+      :desc "Keybindings cheatsheet" "h SPC" #'eden-keybindings-help)
 
-(map!
- "C-c a" #'ai-code-menu
- "C-c A" #'agent-shell-workspace-toggle
- "C-c d" #'crux-duplicate-current-line-or-region
- "C-c n" #'crux-cleanup-buffer-or-region)
+(map! "C-c a" #'ai-code-menu
+      "C-c A" #'agent-shell-workspace-toggle
+      [remap move-beginning-of-line] #'crux-move-beginning-of-line
+      [remap kill-line] #'crux-smart-kill-line)
 
-;; ═══ Crux remaps (mode-agnostic, zero cost) ═════════════════
-
-(map!
- [remap move-beginning-of-line] #'crux-move-beginning-of-line
- [remap kill-line]              #'crux-smart-kill-line)
-
-;; ═══ Localleader: Language-Specific ══════════════════════════
-
-;; ─── Org Mode ─────────────────────────────────────────────────
+;; Plan/task buffers are Org files; retain only operations not already provided
+;; by Doom's Org module.
 (after! org
   (map! :localleader
         :map org-mode-map
-        (:prefix ("s" . "properties")
-         :desc "Tags"            "t" #'org-set-tags
-         :desc "Set property"    "s" #'org-set-property
-         :desc "Delete property" "d" #'org-delete-property)
-        (:prefix ("l" . "insert")
-         :desc "Link"            "l" #'org-insert-link
-         :desc "Screenshot"      "s" #'org-download-screenshot
-         :desc "Footnote"        "f" #'org-footnote-action)
-        (:prefix ("x" . "export")
-         :desc "Dispatch"        "d" #'org-export-dispatch)))
+        (:prefix ("p" . "properties")
+         :desc "Set property" "p" #'org-set-property
+         :desc "Delete property" "d" #'org-delete-property
+         :desc "Tags" "t" #'org-set-tags)))
 
-;; ─── Markdown Mode ────────────────────────────────────────────
-(map! :localleader
-      :map markdown-mode-map
-      (:prefix ("i" . "insert")
-       :desc "Blockquote"        "q"  #'markdown-insert-blockquote
-       :desc "Bold"              "b"  #'markdown-insert-bold
-       :desc "Code"              "c"  #'markdown-insert-code
-       :desc "Italic"            "e"  #'markdown-insert-italic
-       :desc "Footnote"          "f"  #'markdown-insert-footnote
-       :desc "Code block"        "s"  #'markdown-insert-gfm-code-block
-       :desc "Image"             "i"  #'markdown-insert-image
-       :desc "Link"              "l"  #'markdown-insert-link
-       :desc "List item"         "n"  #'markdown-insert-list-item
-       (:prefix ("h" . "heading")
-        :desc "Level 1"          "1"  #'markdown-insert-atx-1
-        :desc "Level 2"          "2"  #'markdown-insert-atx-2
-        :desc "Level 3"          "3"  #'markdown-insert-atx-3
-        :desc "Level 4"          "4"  #'markdown-insert-atx-4
-        :desc "Level 5"          "5"  #'markdown-insert-atx-5
-        :desc "Level 6"          "6"  #'markdown-insert-atx-6)))
+;; Markdown preview is deliberately low-frequency and mode-local.
+(after! markdown-mode
+  (map! :localleader
+        :map markdown-mode-map
+        :desc "Live preview" "p" #'eden-markdown-preview-mode))

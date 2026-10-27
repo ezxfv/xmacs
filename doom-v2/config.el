@@ -143,7 +143,10 @@
     (when (string-match-p "\\.tsx\\'" (or (buffer-file-name) ""))
       (lsp-deferred))))
 
-;; ─── 9. Docker / Kubernetes / Helm ───────────────────────────
+;; ─── 9. Markdown Preview ─────────────────────────────────────
+(load! "markdown-preview")
+
+;; ─── 10. Docker / Kubernetes / Helm ──────────────────────────
 (after! dockerfile-mode
   (add-hook 'dockerfile-mode-hook #'lsp-deferred))
 
@@ -163,7 +166,9 @@
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . go-mode))
 (add-to-list 'auto-mode-alist '("\\.gotmpl\\'" . go-mode))
 
-;; ─── 10. AI: Agent Workspace ─────────────────────────────────
+;; ─── 11. AI: Agent Workspace ─────────────────────────────────
+(load! "agent-workflow")
+
 (use-package! agent-shell
   :commands (agent-shell
              agent-shell-new-shell
@@ -339,4 +344,5 @@
       scroll-step 2)
 
 ;; ─── 20. Load Keybindings ────────────────────────────────────
+(load! "keybindings-help")
 (load! "keybindings")

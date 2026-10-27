@@ -63,7 +63,7 @@
        (json +lsp)
        (javascript +lsp)
        lua
-       (markdown +grip)
+       markdown
        (org +dragndrop +journal +pandoc +pretty +roam)
        plantuml
        (python +lsp +ruff)

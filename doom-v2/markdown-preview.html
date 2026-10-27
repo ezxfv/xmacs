@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Markdown Preview</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/contrib/auto-render.min.js"></script>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+    mermaid.initialize({ startOnLoad: false, theme: "auto", securityLevel: "strict" });
+    let revision = "";
+
+    async function render() {
+      const response = await fetch(`/content.html?t=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) return;
+      const next = await response.text();
+      if (next === revision) return;
+      revision = next;
+
+      const root = document.getElementById("markdown-body");
+      root.innerHTML = next;
+      root.querySelectorAll("pre > code.language-mermaid").forEach((code) => {
+        const diagram = document.createElement("div");
+        diagram.className = "mermaid";
+        diagram.textContent = code.textContent;
+        code.parentElement.replaceWith(diagram);
+      });
+      await mermaid.run({ nodes: root.querySelectorAll(".mermaid"), suppressErrors: true });
+      renderMathInElement(root, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "$", right: "$", display: false },
+          { left: "\\(", right: "\\)", display: false }
+        ],
+        throwOnError: false,
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      });
+    }
+
+    addEventListener("load", () => {
+      render();
+      setInterval(render, 400);
+    });
+  </script>
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; background: Canvas; color: CanvasText; }
+    .markdown-body { box-sizing: border-box; max-width: 980px; min-height: 100vh; margin: 0 auto; padding: 40px; }
+    .mermaid { overflow-x: auto; text-align: center; }
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding-block: 0.5rem; }
+    @media (max-width: 767px) { .markdown-body { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <article id="markdown-body" class="markdown-body"><p>Waiting for Markdown…</p></article>
+</body>
+</html>
