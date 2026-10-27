@@ -179,15 +179,21 @@
              agent-shell-anthropic-start-claude-code)
   :init
   (setq agent-shell-preferred-agent-config 'codex
-        agent-shell-session-strategy 'prompt
+        ;; Avoid the 100ms minibuffer progress animation used by `prompt'.
+        ;; Use C-u C-u M-x agent-shell when explicit session selection is needed.
+        agent-shell-session-strategy 'latest
         agent-shell-session-restore-strategy 'minimal
         agent-shell-show-session-id t
+        agent-shell-show-busy-indicator nil
         agent-shell-display-action '(display-buffer-same-window)
         agent-shell-openai-codex-acp-command
         '("npx" "-y" "@agentclientprotocol/codex-acp")
         agent-shell-openai-default-model-id
         (symbol-name eden-sub2api-default-model))
   :config
+  ;; ai-code 1.990 still calls the pre-0.89 Agent Shell queue API.
+  (unless (fboundp 'agent-shell-prompt-queue)
+    (defalias 'agent-shell-prompt-queue #'agent-shell-queue-request))
   (setq agent-shell-openai-authentication
         (agent-shell-openai-make-authentication :api-key #'eden-sub2api-token)
         agent-shell-openai-codex-environment
@@ -203,7 +209,16 @@
   :after agent-shell
   :commands agent-shell-workspace-toggle
   :init
-  (setq agent-shell-workspace-sidebar-width 28))
+  (setq agent-shell-workspace-sidebar-width 28)
+  :config
+  ;; Buffer isolation treats IME/posframe and Plan/Diff buffers as foreign and
+  ;; switches tabs underneath them. Keep the Agents tab composable instead.
+  (when agent-shell-workspace--isolation-active
+    (agent-shell-workspace--deactivate-isolation))
+  (advice-add 'agent-shell-workspace--activate-isolation :override #'ignore)
+  (add-hook 'agent-shell-mode-hook #'eden-agent-workspace-subscribe)
+  (advice-add 'agent-shell-workspace-sidebar-open :after
+              #'eden-agent-workspace-disable-polling))
 
 ;; ─── 12. AI: gptel ──────────────────────────────────────────
 (use-package! gptel
@@ -319,7 +334,9 @@
           default-input-method "pyim"
           pyim-default-scheme 'quanpin
           pyim-english-input-switch-functions '(pyim-probe-isearch-mode)
-          pyim-page-length 6)))
+          pyim-page-length 6
+          ;; Reduce overlay redraw in terminal Emacs.
+          pyim-page-style (if (display-graphic-p) 'two-lines 'one-line))))
 
 ;; ─── 17. Editing Tools ───────────────────────────────────────
 (use-package! avy
@@ -353,7 +370,10 @@
           scroll-margin 0)))
 
 (unless IS-MAC
-  (when (fboundp 'pixel-scroll-precision-mode)
+  ;; Pixel scrolling only benefits graphical frames and causes extra terminal
+  ;; redisplay, which can disrupt input-method pre-edit text.
+  (when (and (display-graphic-p)
+             (fboundp 'pixel-scroll-precision-mode))
     (pixel-scroll-precision-mode 1))
   (setq scroll-conservatively 101
         scroll-margin 0))
