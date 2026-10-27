@@ -32,7 +32,7 @@
        word-wrap
 
        :emacs
-       (dired +icons +ranger)
+       (dired +icons)
        electric
        (ibuffer +icons)
        undo
@@ -64,7 +64,7 @@
        (javascript +lsp)
        lua
        (markdown +grip)
-       (org +dragndrop +journal +pandoc +pretty +roam2)
+       (org +dragndrop +journal +pandoc +pretty +roam)
        plantuml
        (python +lsp +ruff)
        rest

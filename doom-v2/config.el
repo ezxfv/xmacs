@@ -220,7 +220,7 @@
   (setq org-startup-indented t
         org-log-done 'time))
 
-(when (featurep! :lang org +roam2)
+(when (featurep! :lang org +roam)
   (use-package! org-roam-ui
     :after org-roam
     :config
