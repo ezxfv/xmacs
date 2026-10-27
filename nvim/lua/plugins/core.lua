@@ -51,6 +51,10 @@ return {
             function() require("snacks").picker.lines() end,
             desc = "Jump to line",
           },
+          ["<Leader>fj"] = {
+            function() require("snacks").picker.jumps() end,
+            desc = "Find jump history",
+          },
           ["<Leader>v"] = { "<Cmd>vsplit<CR>", desc = "Vertical split" },
 
           -- Buffer and project switching.
