@@ -1,0 +1,21 @@
+---@type LazySpec
+return {
+  "AstroNvim/astrocommunity",
+
+  -- Language support matching the non-AI programming stack in doom-v2.
+  { import = "astrocommunity.pack.go" },
+  { import = "astrocommunity.pack.python" },
+  { import = "astrocommunity.pack.typescript" },
+  { import = "astrocommunity.pack.rust" },
+  { import = "astrocommunity.pack.lua" },
+  { import = "astrocommunity.pack.bash" },
+  { import = "astrocommunity.pack.json" },
+  { import = "astrocommunity.pack.yaml" },
+  { import = "astrocommunity.pack.docker" },
+  { import = "astrocommunity.pack.markdown" },
+
+  -- Traditional editor workflows: projects, diffs, and debugger feedback.
+  { import = "astrocommunity.project.project-nvim" },
+  { import = "astrocommunity.git.diffview-nvim" },
+  { import = "astrocommunity.debugging.nvim-dap-virtual-text" },
+}
